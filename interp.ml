@@ -43,3 +43,7 @@ let rec interpret (program : Absyn.program) = match program with
 let interpret_program program =
     (Tables.init_label_table program;                                                                                                 
      interpret program)
+
+let interp_dim (array : Absyn.Dim) = 
+
+let interpret_let (
