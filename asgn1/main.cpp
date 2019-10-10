@@ -16,9 +16,12 @@ void removeChar(char* line, char target){
 }
 void preProc(FILE* pipe, string filename){
   char Buff[buffSize];
-  const char* readLine = fgets(Buff, buffSize, pipe);
-  removeChar(Buff, '\n');
-  cout << "FirstLine: " << Buff << endl;
+  while(true){
+    const char* readLine = fgets(Buff, buffSize, pipe);
+    if (readLine == nullptr)break;
+    removeChar(Buff, '\n');
+    //cout << "FirstLine: " << Buff << endl;
+  }
 }
 
 int main(int argc, char* argv[]){
@@ -32,7 +35,7 @@ int main(int argc, char* argv[]){
   string com = CPP + " " + inFile;
   cout << "command=\"" << com << "\"" << endl;
   FILE* pipe = popen (com.c_str(), "r");
-  int fileCloseStat = pclose(pipe);
   preProc(pipe, inFile);
+  int fileCloseStat = pclose(pipe);
   return 0;
 }
