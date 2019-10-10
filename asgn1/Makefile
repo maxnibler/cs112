@@ -1,7 +1,7 @@
-CDEPS = main.cpp
-OBJ = main.o
+CDEPS = main.cpp string_set.cpp
+OBJ = main.o string_set.o
 GPP = g++ -o
-WARN = -Wall -Wextra -Wpedantic -Wshadow -Wold-style-cast
+WARN = -std=gnu++17 -g -O0 -Wall -Wextra -Wold-style-cast
 
 all : $(OBJ)
 	$(GPP) oc $(OBJ) 	
@@ -15,7 +15,7 @@ spotless :
 ci :
 
 deps : $(CDEPS)
-	g++ -c $(CDEPS)
+	g++ -c $(WARN) $(CDEPS)
 
 test :
 	./oc test.oc
