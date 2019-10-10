@@ -16,11 +16,22 @@ void removeChar(char* line, char target){
 }
 void preProc(FILE* pipe, string filename){
   char Buff[buffSize];
+  int lineNum = 1;
   while(true){
     const char* readLine = fgets(Buff, buffSize, pipe);
     if (readLine == nullptr)break;
     removeChar(Buff, '\n');
     //cout << "FirstLine: " << Buff << endl;
+    char* saveLine = nullptr;
+    char* linePtr = Buff;
+    for(int tokCount = 1;; ++tokCount){
+      char* token = strtok_r(linePtr, " \t\n", &saveLine);
+      linePtr = nullptr;
+      if (token == nullptr) break;
+      cout << lineNum << "; " << tokCount << ": " <<
+	token << endl;
+    }
+    ++lineNum;
   }
 }
 
