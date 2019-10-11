@@ -13,7 +13,7 @@ spotless :
 	rm oc $(OBJ)
 
 ci :
-	git commit -am "$<<"
+	git commit -am "Generic commit"
 
 deps : $(CDEPS)
 	g++ -c $(WARN) $(CDEPS)
