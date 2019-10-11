@@ -12,8 +12,8 @@ clean :
 spotless :
 	rm oc $(OBJ)
 
-ci : $(CDEPS)
-	git commit -am "$<"
+ci :
+	git commit -am "$<<"
 
 deps : $(CDEPS)
 	g++ -c $(WARN) $(CDEPS)
