@@ -1,5 +1,6 @@
 #include <cerrno>
 #include <cstring>
+#include <libgen.h>
 #include <iomanip>
 #include <iostream>
 #include <fstream>
@@ -55,8 +56,7 @@ int main(int argc, char* argv[]){
     exit(-1);
   }else{
     com = CPP + " " + inFile;
-    inFile[inFile.length()-2] = 's';
-    inFile[inFile.length()-1] = 't';
+    string filename = basename((char*)inFile) + "str";
   }
   //cout << "command=\"" << inFile << "\"" << endl;
   string filename = inFile+"r";
