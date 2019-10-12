@@ -25,17 +25,13 @@ void preProc(FILE* pipe, string filename){
     const char* readLine = fgets(Buff, buffSize, pipe);
     if (readLine == nullptr)break;
     removeChar(Buff, '\n');
-    //cout << "Line  " << lineNum << " of " << filename << " : " << Buff << endl;
     char* saveLine = nullptr;
     char* linePtr = Buff;
     for(int tokCount = 1;; ++tokCount){
       const char* token = strtok_r(linePtr, " \t\n", &saveLine);
       linePtr = nullptr;
       if (token == nullptr) break;
-      //cout << lineNum << "; " << tokCount << ": " <<
-      //token << endl;
-      //const string* returnStr =
-	strSet.intern(token);
+      strSet.intern(token);
     }
     ++lineNum;
   }
