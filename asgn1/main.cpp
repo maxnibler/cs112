@@ -25,20 +25,22 @@ void preProc(FILE* pipe, string filename){
     const char* readLine = fgets(Buff, buffSize, pipe);
     if (readLine == nullptr)break;
     removeChar(Buff, '\n');
-    //cout << "FirstLine: " << Buff << endl;
+    //cout << "Line  " << lineNum << " of " << filename << " : " << Buff << endl;
     char* saveLine = nullptr;
     char* linePtr = Buff;
     for(int tokCount = 1;; ++tokCount){
       const char* token = strtok_r(linePtr, " \t\n", &saveLine);
       linePtr = nullptr;
       if (token == nullptr) break;
-      // cout << lineNum << "; " << tokCount << ": " <<
-      //	token << endl;
-      const string* returnStr = strSet.intern(token);
+      //cout << lineNum << "; " << tokCount << ": " <<
+      //token << endl;
+      //const string* returnStr =
+	strSet.intern(token);
     }
     ++lineNum;
   }
-  cout << filename << endl;
+  //cout << filename << endl;
+  //string noname = "test.str";
   filebuf outBuff;
   outBuff.open(filename, ios::out);
   ostream outStream(&outBuff);
@@ -48,6 +50,8 @@ void preProc(FILE* pipe, string filename){
 
 int main(int argc, char* argv[]){
   string com;
+  const char* suff = "str";
+  char* filename;
   string inFile = argv[argc-1];
   if ( inFile[inFile.length()-1] != 'c' ||
        inFile[inFile.length()-2] != 'o' ||
@@ -56,12 +60,17 @@ int main(int argc, char* argv[]){
     exit(-1);
   }else{
     com = CPP + " " + inFile;
-    string filename = basename((char*)inFile) + "str";
+    filename = basename(argv[argc-1]);
+    string filestr = filename;
+    int len = filestr.length();
+    filename[len - 1] = '\0';
+    filename[len - 2] = '\0';
+    strcat(filename, suff);
   }
-  //cout << "command=\"" << inFile << "\"" << endl;
-  string filename = inFile+"r";
+  //cout << "command=\"" << filename << "\"" << endl;
+  //string filename = inFile+"r";
   FILE* pipe = popen (com.c_str(), "r");
   preProc(pipe, filename);
-  int fileCloseStat = pclose(pipe);
+  pclose(pipe);
   return 0;
 }
