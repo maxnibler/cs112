@@ -1,9 +1,10 @@
 DEPS = main string_set astree lyutils auxlib
 CDEPS = ${DEPS:=.cpp}
 OBJ = ${DEPS:=.o}
-GPP = g++
+GPP = g++ -std=gnu++2a -g -O0
 EXEC = oc
-WARN = -std=gnu++17 -g -O0 -Wall -Wextra -Wold-style-cast
+YY = -Wno-sign-compare -Wno-register
+WARN =  -Wall -Wextra -Wpedantic -Wshadow -Wold-style-cast
 
 all : $(OBJ)
 	$(GPP) $(WARN) -o $(EXEC) $(OBJ) 	
