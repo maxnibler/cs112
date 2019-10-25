@@ -4,7 +4,7 @@ GPP = g++ -o
 WARN = -std=gnu++17 -g -O0 -Wall -Wextra -Wold-style-cast
 
 all : $(OBJ)
-	$(GPP) oc $(OBJ) 	
+	$(GPP) oc $(OBJ)
 
 clean :
 	rm $(OBJ)
