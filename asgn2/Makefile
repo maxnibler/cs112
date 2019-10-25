@@ -1,17 +1,21 @@
 DEPS = main string_set astree lyutils auxlib
 CDEPS = ${DEPS:=.cpp}
 OBJ = ${DEPS:=.o}
-GPP = g++ -o
+GPP = g++
+EXEC = oc
 WARN = -std=gnu++17 -g -O0 -Wall -Wextra -Wold-style-cast
 
 all : $(OBJ)
-	$(GPP) oc $(OBJ) 	
+	$(GPP) $(WARN) -o $(EXEC) $(OBJ) 	
+
+%.o : %.cpp
+	$(GPP) $(WARN) -o $@ -c $<
 
 clean :
 	rm $(OBJ)
 
 spotless :
-	rm oc $(OBJ)
+	rm $(EXEC) $(OBJ)
 
 ci :
 	git commit -am "Generic commit"
