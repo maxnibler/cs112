@@ -1,5 +1,6 @@
-CDEPS = main.cpp string_set.cpp
-OBJ = main.o string_set.o
+DEPS = main string_set astree lyutils auxlib
+CDEPS = ${DEPS:=.cpp}
+OBJ = ${DEPS:=.o}
 GPP = g++ -o
 WARN = -std=gnu++17 -g -O0 -Wall -Wextra -Wold-style-cast
 
