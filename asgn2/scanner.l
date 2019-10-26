@@ -69,7 +69,7 @@ letter               [a-zA-Z]
                 return lexer::token(TOK_INTCON);        }
 
 {letter}                    {
-               return  lexer::token(TOK_CHARCON);
+                return lexer::token(TOK_CHARCON);
                                           }
 
 {letter}*                   {

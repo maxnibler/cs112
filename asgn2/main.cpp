@@ -92,7 +92,8 @@ int main(int argc, char* argv[]){
   //cout << "command=\"" << filename << "\"" << endl;
   //string filename = inFile+"r";
   yyin = popen (com.c_str(), "r");
-  cout << yylex() << endl;
+  cout << "HJFDKSHJK:\n" << yylex() << endl;
+  //cout << yylex() << endl;
   preProc(yyin, filename);
   pclose(yyin);
   return 0;

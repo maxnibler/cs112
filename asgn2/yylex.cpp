@@ -1177,7 +1177,7 @@ case 38:
 YY_RULE_SETUP
 #line 71 "scanner.l"
 {
-               return  lexer::token(TOK_CHARCON);
+                return lexer::token(TOK_CHARCON);
                                           }
 	YY_BREAK
 case 39:
