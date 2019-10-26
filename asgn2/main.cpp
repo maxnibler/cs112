@@ -7,6 +7,10 @@
 #include <string>
 #include <string.h>
 #include "string_set.h"
+//#include "yyparse.h"
+#include "lyutils.h"
+#include "auxlib.h"
+#include "astree.h"
 using namespace std;
 
 const string CPP = "/usr/bin/cpp -nostdinc";
@@ -45,6 +49,26 @@ void preProc(FILE* pipe, string filename){
   outBuff.close();
 }
 
+void flags(int argc, char* argv[]){
+  //yy_flex_debug = 0;
+  //yy_debug = 0;
+  string opt;
+  for (int i = 1; i < argc - 1; i++){
+    opt = argv[i];
+    if (opt[0] == '-'){
+      if (opt[1] == 'y'){
+	//yy_debug = 1;
+	break;
+      }
+      if (opt[1] == 'l'){
+	//yy_flex_debug = 1;
+	break;
+      }
+      cerr << "Flag " << opt << " invalid" << endl;
+    }
+  }
+}
+
 int main(int argc, char* argv[]){
   string com;
   const char* suff = "str";
@@ -64,9 +88,11 @@ int main(int argc, char* argv[]){
     filename[len - 2] = '\0';
     strcat(filename, suff);
   }
+  flags (argc, argv);
   //cout << "command=\"" << filename << "\"" << endl;
   //string filename = inFile+"r";
-  FILE* yyin = popen (com.c_str(), "r");
+  yyin = popen (com.c_str(), "r");
+  cout << yylex() << endl;
   preProc(yyin, filename);
   pclose(yyin);
   return 0;
