@@ -1,0 +1,204 @@
+head	1.9;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.9
+date	2019.10.04.20.20.04;	author -;	state -;
+branches;
+next	1.8;
+
+1.8
+date	2019.04.18.20.57.20;	author -;	state -;
+branches;
+next	1.7;
+
+1.7
+date	2019.04.18.20.53.59;	author -;	state -;
+branches;
+next	1.6;
+
+1.6
+date	2019.04.18.20.53.28;	author -;	state -;
+branches;
+next	1.5;
+
+1.5
+date	2019.04.18.20.52.39;	author -;	state -;
+branches;
+next	1.4;
+
+1.4
+date	2019.04.18.20.51.02;	author -;	state -;
+branches;
+next	1.3;
+
+1.3
+date	2019.04.17.00.04.09;	author -;	state -;
+branches;
+next	1.2;
+
+1.2
+date	2016.10.20.23.12.12;	author -;	state -;
+branches;
+next	1.1;
+
+1.1
+date	2015.03.17.22.42.29;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.9
+log
+@-
+@
+text
+@#!/bin/bash -x
+# $Id: mk.build,v 1.8 2019-04-18 13:57:20-07 - - $
+#
+# This does the build and runs checksource.
+#
+BINDIR=/afs/cats.ucsc.edu/courses/cse110a-wm/bin
+if [ -f PARTNER ]; then
+   $BINDIR/partnercheck 2>&1 | tee partnercheck.log
+fi
+CPPFILES=$(ls *.h *.c* | egrep -v 'yylex.cpp|yyparse.h|yyparse.cpp')
+CHECKFILES="$CPPFILES *.[ly] Makefile README"
+$BINDIR/checksource $CHECKFILES 2>&1 | tee checksource.log
+$BINDIR/cpplint.py.perl $CPPFILES 2>&1 | tee cpplint.log
+gmake 2>&1 | tee gmake.log
+@
+
+
+1.8
+log
+@-
+@
+text
+@d2 1
+a2 1
+# $Id: mk.build,v 1.7 2019-04-18 13:53:59-07 - - $
+d6 1
+a6 1
+BINDIR=/afs/cats.ucsc.edu/courses/cmps104a-wm/bin
+@
+
+
+1.7
+log
+@-
+@
+text
+@d2 1
+a2 1
+# $Id: mk.build,v 1.6 2019-04-18 13:53:28-07 - - $
+d10 2
+a11 2
+CPPFILES=$(ls *.c* | egrep -v 'yylex.cpp|yyparse.cpp')
+CHECKFILES="$CPPFILES *.[hly] Makefile README"
+@
+
+
+1.6
+log
+@-
+@
+text
+@d2 1
+a2 1
+# $Id: mk.build,v 1.5 2019-04-18 13:52:39-07 - - $
+d10 1
+a10 1
+CPPFILES=$(ls *.c* | egrep -v 'yylex.cpp|yyparse.h|yyparse.cpp')
+@
+
+
+1.5
+log
+@-
+@
+text
+@d2 1
+a2 1
+# $Id: mk.build,v 1.4 2019-04-18 13:51:02-07 - - $
+d10 2
+a11 3
+CPPFILES=$(ls *.[hly] *.c* \
+      | egrep -v 'yylex.cpp|yyparse.h|yyparse.cpp')
+CHECKFILES="$CPPFILES Makefile README"
+@
+
+
+1.4
+log
+@-
+@
+text
+@d2 1
+a2 1
+# $Id: mk.build,v 1.3 2019-04-16 17:04:09-07 - - $
+d10 1
+a10 1
+FILES=$(ls *.[hly] *.c* Makefile README \
+d12 3
+a14 2
+$BINDIR/checksource $FILES 2>&1 | tee checksource.log
+$BINDIR/cpplint.py.perl $FILES 2>&1 | tee cpplint.log
+@
+
+
+1.3
+log
+@-
+@
+text
+@d2 1
+a2 1
+# $Id: mk.build,v 1.2 2016-10-20 16:12:12-07 - - $
+d11 1
+a11 3
+      | grep -v yylex.cpp \
+      | grep -v yyparse.h \
+      | grep -v yyparse.cpp)
+@
+
+
+1.2
+log
+@-
+@
+text
+@d2 1
+a2 1
+# $Id: mk.build,v 1.1 2015-03-17 15:42:29-07 - - $
+d6 5
+a10 3
+PATH=$PATH:/afs/cats.ucsc.edu/courses/cmps012b-wm/bin
+if [ -f PARTNER ] ; then partnercheck 2>&1 | tee partnercheck.log ; fi
+Files=$(ls *.[hly] *.c* Makefile README \
+d14 2
+a15 1
+checksource $Files 2>&1 | tee checksource.log
+@
+
+
+1.1
+log
+@-
+@
+text
+@d1 2
+a2 2
+#!/bin/sh -x
+# $Id: mk.build,v 1.3 2011-10-04 14:01:56-07 - - $
+d8 5
+a12 1
+checksource *.[hly] *.c* Makefile README 2>&1 | tee checksource.log
+@

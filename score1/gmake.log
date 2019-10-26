@@ -1,0 +1,3 @@
+g++    -c -o main.o main.cpp
+g++    -c -o string_set.o string_set.cpp
+g++ -o oc main.o string_set.o

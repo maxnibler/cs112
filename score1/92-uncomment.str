@@ -1,0 +1,8 @@
+string_set[   0: 101599708734918201950x19992c8->"1"
+string_set[   6:  69258433037064822380x1999278->""92-uncomment.oc""
+string_set[   7: 139858879747519083220x1999478->""<command-line>""
+string_set[   8:  89925116131774838250x1999398->""<built-in>""
+string_set[   9:  40380711992367638610x1999258->"#"
+load_factor = 0.294118
+bucket_count = 17
+max_bucket_size = 1

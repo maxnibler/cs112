@@ -1,0 +1,14 @@
+string_set[   3: 101599708734918201950x1bf42b8->"1"
+string_set[   4: 141272740733357852460x1bf43e8->";)O[l]=56-o,b&p|d&q||Q(l+1,b|p,d|q),"
+string_set[   6:   3423639818142115880x1bf4478->"char"
+string_set[  14: 162010164799992453890x1bf4598->"l|1<<22-l;for(;l>7?!write(1,O,9):o--"
+string_set[  17:  99034848649138118060x1bf44d8->"O[9];Q(l,b,d){int"
+string_set[  18: 104163094832242827360x1bf4408->"p*=2,q*=2;}main(){O[8]=10;Q(0,0,0);}"
+string_set[  20:  89925116131774838250x1bf4378->""<built-in>""
+string_set[  26:  40380711992367638610x1bf4248->"#"
+string_set[  27:  48085369552507935660x1bf4268->""90-c8q.oc""
+string_set[  30: 139858879747519083220x1bf4458->""<command-line>""
+string_set[  32: 129323105882899159080x1bf4528->"o=8,p=1,q=1<<"
+load_factor = 0.297297
+bucket_count = 37
+max_bucket_size = 1
