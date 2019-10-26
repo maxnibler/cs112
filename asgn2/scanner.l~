@@ -1,0 +1,41 @@
+%{
+
+}%
+
+%%
+"+"                  { return PLUS;       }
+"-"                  { return MINUS;      }
+"*"                  { return TIMES;      }
+"/"                  { return SLASH;      }
+"%"                  { return MOD;        }
+"("                  { return LPAREN;     }
+")"                  { return RPAREN;     }
+"["                  { return LBRACK;     }
+"]"                  { return RBRACK;     }
+"{"                  { return LCURL;      }
+"}"                  { return RCURL;      }
+";"                  { return SEMICOLON;  }
+","                  { return COMMA;      }
+"="                  { return EQLS;       }
+"=="                 { return EQLTO;      }
+"<>"                 { return NEQLTO;     }
+"<"                  { return LSS;        }
+">"                  { return GTR;        }
+"<="                 { return LEQLTO;     }
+">="                 { return GEQLTO;     }
+"->"                 { return MEMBER;     }
+"if"                 { return IF;         }
+"else"               { return ELSE;       }
+"while"              { return WHILE;      }
+"return"             { return RETURN;     }
+"alloc"              { return ALLOC;      }
+"nullptr"            { return NULLPTR;    }
+"not"                { return NOT;        }
+"int"                { return INT;        }
+"string"             { return STRING;     }
+"struct"             { return STRUCT;     }
+"array"              { return ARRAY;      }
+"ptr"                { return PTR;        }
+"void"               { return VOID;       }
+%%
+{return 1;}
