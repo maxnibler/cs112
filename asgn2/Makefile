@@ -44,6 +44,9 @@ ci :
 deps : $(CDEPS)
 	g++ -c $(WARN) $(CDEPS)
 
+ssh :
+	ssh mnibler@unix.ucsc.edu
+
 test :
 	./oc test.oc
 
