@@ -1,0 +1,75 @@
+head	1.2;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.2
+date	2019.04.25.19.55.47;	author -;	state -;
+branches;
+next	1.1;
+
+1.1
+date	2019.04.16.19.14.45;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@-
+@
+text
+@// $Id: 45-towers-of-hanoi.oc,v 1.1 2019-04-16 12:14:45-07 - - $
+
+#include "oclib.h"
+
+void move (string src, string dst) {
+   putstr ("Move a disk from the ");
+   putstr (src);
+   putstr (" to the ");
+   putstr (dst);
+   putstr (".\n");
+}
+
+void towers (int ndisks, string src, string tmp, string dst) {
+   if (ndisks < 1) return;
+   towers (ndisks - 1, src, dst, tmp);
+   move (src, dst);
+   towers (ndisks - 1, tmp, src, dst);
+}
+
+int main (int argc, array<string> argv) {
+   assert (argc == 2);
+   int count = argv[1][0] - '0';
+   assert (count > 0);
+   assert (count < 9);
+   putstr (argv[0]);
+   putstr (": ");
+   putint (count);
+   putstr (" disks\n");
+   towers (count, "source", "temporary", "distination");
+   return SUCCESS;
+}
+
+@
+
+
+1.1
+log
+@-
+@
+text
+@d1 1
+a1 1
+// $Id: 45-towers-of-hanoi.oc,v 1.1 2019-04-16 12:00:11-07 - - $
+d20 10
+a29 2
+int main() {
+   towers (4, "source", "temporary", "distination");
+@

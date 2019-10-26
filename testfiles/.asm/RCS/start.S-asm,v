@@ -1,0 +1,36 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.1
+date	2019.04.29.21.40.36;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@# $Id: start.S-asm,v 1.1 2019-04-11 12:38:55-07 - - $
+
+.text
+.global _start
+_start:
+        pop     %rbp        # C compiler will push %rbp
+        pop     %rdi        # argc
+        mov     %rsp, %rsi  # argv
+        andq    $-16, %rsp  # align to 16-byte boundary
+        call    main
+        movq    %rax, %rdi  # exit
+        movq    $0, %rax    # syscall exit code
+        syscall
+@

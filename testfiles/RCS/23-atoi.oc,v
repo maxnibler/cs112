@@ -1,0 +1,120 @@
+head	1.3;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.3
+date	2019.04.23.22.22.03;	author -;	state -;
+branches;
+next	1.2;
+
+1.2
+date	2019.04.18.21.06.21;	author -;	state -;
+branches;
+next	1.1;
+
+1.1
+date	2019.04.16.19.14.45;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.3
+log
+@-
+@
+text
+@// $Id: 23-atoi.oc,v 1.2 2019-04-18 14:06:21-07 - - $
+
+#include "oclib.h"
+
+int atoi (string str) {
+   BOOL neg = FALSE;
+   int num = 0;
+   int digit = 0;
+   assert (str != nullptr);
+   if (str[0] != '\0') {
+      if (str[0] == '-') {
+         digit = digit + 1;
+         neg = TRUE;
+      }
+      BOOL contin = TRUE;
+      while (contin) {
+         if (str[digit] == '\0') {
+            contin = FALSE;
+         }else {
+            int chr = str[digit];
+            digit = digit + 1;
+            if (chr < '0') contin = FALSE;
+            else if (chr > '9') contin = FALSE;
+            else num = num * 10 + chr - '0';
+         }
+      }
+      if (neg) num = - num;
+   }
+   return num;
+}
+
+int main (int argc, array<string> argv) {
+   int argi = 1;
+   string arg = nullptr;
+   while (argi < argc) {
+      arg = argv[argi];
+      putstr (arg);
+      putstr (" = ");
+      putint (atoi (arg));
+      putchr ('\n');
+      argi = argi + 1;
+   }
+   return SUCCESS;
+}
+
+@
+
+
+1.2
+log
+@-
+@
+text
+@d1 1
+a1 1
+// $Id: 23-atoi.oc,v 1.1 2019-04-16 12:14:45-07 - - $
+a8 2
+   BOOL contin = FALSE;
+   int c = 0;
+d15 1
+a15 1
+      contin = TRUE;
+d20 1
+a20 1
+            c = str[digit];
+d22 3
+a24 3
+            if (c < '0') contin = FALSE;
+            else if (c > '9') contin = FALSE;
+            else num = num * 10 + c - '0';
+@
+
+
+1.1
+log
+@-
+@
+text
+@d1 1
+a1 1
+// $Id: 23-atoi.oc,v 1.1 2019-04-16 12:00:10-07 - - $
+d6 1
+a6 1
+   int neg = FALSE;
+d9 1
+a9 1
+   int contin = FALSE;
+@
