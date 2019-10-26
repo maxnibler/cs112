@@ -14,7 +14,7 @@ CYGEN = yyparse.cpp
 LREPORT = yylex.output
 YREPORT = yyparse.output
 
-all : $(OBJ) $(CLGEN) $(CYGEN)
+all : $(OBJ)
 	$(GPP) $(WARN) -o $(EXEC) $(OBJ) 	
 
 %.o : %.cpp

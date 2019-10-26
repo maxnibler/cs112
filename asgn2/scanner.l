@@ -3,6 +3,10 @@
 
 #include "lyutils.h"
 #include "astree.h"
+
+#define YY_USER_ACTION  { lexer::advance(); }
+#define YY_FATAL_ERROR(msg) { lexer::fatal_error (msg); }
+
 %}
 
 %option 8bit
@@ -19,53 +23,57 @@ nonzero              [1-9]
 letter               [a-zA-Z]
 
 %%
-"+"                  { return '+';        }
-"-"                  { return '-';        }
-"*"                  { return '*';        }
-"/"                  { return '/';        }
-"%"                  { return '%';        }
-"("                  { return '(';        }
-")"                  { return ')';        }
-"["                  { return '[';        }
-"]"                  { return ']';        }
-"{"                  { return '{';        }
-"}"                  { return '}';        }
-";"                  { return ';';        }
-","                  { return ',';        }
-"="                  { return '=';        }
-"=="                 { return TOK_EQ;     }
-"<>"                 { return TOK_NE;     }
-"<"                  { return TOK_LT;     }
-">"                  { return TOK_GT;     }
-"<="                 { return TOK_LE;     }
-">="                 { return TOK_GE;     }
-"->"                 { return TOK_ARROW;  }
-"if"                 { return TOK_IF;     }
-"else"               { return TOK_ELSE;   }
-"while"              { return TOK_WHILE;  }
-"return"             { return TOK_RETURN; }
-"alloc"              { return TOK_ALLOC;  }
-"nullptr"            { return TOK_NULLPTR;}
-"not"                { return TOK_NOT;    }
-"int"                { return TOK_INT;    }
-"string"             { return TOK_STRING; }
-"struct"             { return TOK_STRUCT; }
-"array"              { return TOK_ARRAY;  }
-"ptr"                { return TOK_PTR;    }
-"void"               { return TOK_VOID;   }
+
+"#".*\n              {  lexer::include();
+                        lexer::newline(); }
+
+"+"                  { return lexer::token('+');        }
+"-"                  { return lexer::token('-');        }
+"*"                  { return lexer::token('*');        }
+"/"                  { return lexer::token('/');        }
+"%"                  { return lexer::token('%');        }
+"("                  { return lexer::token('(');        }
+")"                  { return lexer::token(')');        }
+"["                  { return lexer::token('[');        }
+"]"                  { return lexer::token(']');        }
+"{"                  { return lexer::token('{');        }
+"}"                  { return lexer::token('}');        }
+";"                  { return lexer::token(';');        }
+","                  { return lexer::token(',');        }
+"="                  { return lexer::token('=');        }
+"=="                 { return lexer::token(TOK_EQ);     }
+"<>"                 { return lexer::token(TOK_NE);     }
+"<"                  { return lexer::token(TOK_LT);     }
+">"                  { return lexer::token(TOK_GT);     }
+"<="                 { return lexer::token(TOK_LE);     }
+">="                 { return lexer::token(TOK_GE);     }
+"->"                 { return lexer::token(TOK_ARROW);  }
+"if"                 { return lexer::token(TOK_IF);     }
+"else"               { return lexer::token(TOK_ELSE);   }
+"while"              { return lexer::token(TOK_WHILE);  }
+"return"             { return lexer::token(TOK_RETURN); }
+"alloc"              { return lexer::token(TOK_ALLOC);  }
+"nullptr"            { return lexer::token(TOK_NULLPTR);}
+"not"                { return lexer::token(TOK_NOT);    }
+"int"                { return lexer::token(TOK_INT);    }
+"string"             { return lexer::token(TOK_STRING); }
+"struct"             { return lexer::token(TOK_STRUCT); }
+"array"              { return lexer::token(TOK_ARRAY);  }
+"ptr"                { return lexer::token(TOK_PTR);    }
+"void"               { return lexer::token(TOK_VOID);   }
 
 {letter}({letter}|{digit})* {
-                return TOK_IDENT;         }
+                return lexer::token(TOK_IDENT);         }
 
 {nonzero}({digit})*         {
-                return TOK_INTCON;        }
+                return lexer::token(TOK_INTCON);        }
 
 {letter}                    {
-                return TOK_CHARCON;
+               return  lexer::token(TOK_CHARCON);
                                           }
 
 {letter}*                   {
-                return TOK_STRINGCON;
+                return lexer::token(TOK_STRINGCON);
                                           }
 
 %%
