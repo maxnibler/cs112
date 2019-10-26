@@ -15,6 +15,7 @@
 %option warn
 
 digit                [0-9]
+nonzero              [1-9]
 letter               [a-zA-Z]
 
 %%
@@ -54,14 +55,18 @@ letter               [a-zA-Z]
 "void"               { return TOK_VOID;   }
 
 {letter}({letter}|{digit})* {
-                yylval.id = strdup(yytext);
                 return TOK_IDENT;         }
 
-{digit}+                    {
-                yylval.num = atoi(yytext);
+{nonzero}({digit})*         {
                 return TOK_INTCON;        }
 
+{letter}                    {
+                return TOK_CHARCON;
+                                          }
 
+{letter}*                   {
+                return TOK_STRINGCON;
+                                          }
 
 %%
-{return 1;}
+

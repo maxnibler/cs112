@@ -1,5 +1,6 @@
-DEPS = main string_set astree lyutils auxlib
-CDEPS = ${DEPS:=.cpp}
+DEPS = ${CDEPS} ${YYDEPS}
+YYDEPS = yylex yyparse
+CDEPS = main string_set astree lyutils auxlib
 OBJ = ${DEPS:=.o}
 GPP = g++ -std=gnu++2a -g -O0
 EXEC = oc
@@ -18,6 +19,12 @@ all : $(OBJ) $(CLGEN) $(CYGEN)
 
 %.o : %.cpp
 	$(GPP) $(WARN) -o $@ -c $<
+
+yylex.o : yylex.cpp
+	$(GPP) -c $<
+
+yyparse.o : yyparse.cpp
+	$(GPP) -c $<
 
 $(CLGEN) : $(LSOURCES)
 	flex --outfile=$(CLGEN) $(LSOURCES)
