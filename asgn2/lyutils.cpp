@@ -79,8 +79,8 @@ void lexer::include() {
 int lexer::token (int symbol) {
    yylval = new astree (symbol, lexer::loc, yytext);
    const char* tokitem = parser::get_tname(symbol);
-   printf("%-2ld %2ld.%03ld %4d  %-10s %-s\n",
-	  loc.filenr, loc.linenr, loc.offset, symbol, tokitem, yytext);
+   fprintf(tokfile, "%-2ld %2ld.%03ld %4d  %-10s %-s\n",
+          loc.filenr, loc.linenr, loc.offset, symbol, tokitem, yytext);
    return symbol;
 }
 

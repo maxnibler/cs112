@@ -57,12 +57,12 @@ void flags(int argc, char* argv[]){
     opt = argv[i];
     if (opt[0] == '-'){
       if (opt[1] == 'y'){
-	//yy_debug = 1;
-	break;
+        //yy_debug = 1;
+        break;
       }
       if (opt[1] == 'l'){
-	yy_flex_debug = 1;
-	break;
+        yy_flex_debug = 1;
+        break;
       }
       cerr << "Flag " << opt << " invalid" << endl;
     }

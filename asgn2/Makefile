@@ -17,7 +17,7 @@ LREPORT = yylex.output
 YREPORT = yyparse.output
 
 all : $(OBJ)
-	$(GPP) $(WARN) -o $(EXEC) $(OBJ) 	
+	$(GPP) $(WARN) -o $(EXEC) $(OBJ)
 
 %.o : %.cpp
 	$(GPP) $(WARN) -o $@ -c $<
@@ -60,6 +60,6 @@ test :
 	./oc test.oc
 
 submit :
-	submit cse110a-wm.f19 asg2 Makefile README $(LSOURCES) $(YSOURCES)
-	submit cse110a-wm.f19 asg2 $(CPP) $(HEAD)
+	submit cse110a-wm.f19 asg2 Makefile README $(LSOURCES)
+	submit cse110a-wm.f19 asg2 $(CPP) $(HEAD) $(YSOURCES)
 
