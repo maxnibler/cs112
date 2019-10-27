@@ -107,7 +107,7 @@ int main(int argc, char* argv[]){
     lexint = yylex();
     if (lexint == YYEOF)break;
     else {
-      lexstr = lexer::get_yytname(lexint);
+      //lexstr = lexer::get_yytname(lexint);
       //cout << lexint << endl;
     }
   }

@@ -1,5 +1,6 @@
 // $Id: lyutils.cpp,v 1.13 2019-09-20 16:23:59-07 - - $
 
+#include <cstdio>
 #include <cassert>
 #include <cctype>
 #include <cstring>
@@ -77,7 +78,9 @@ void lexer::include() {
 
 int lexer::token (int symbol) {
    yylval = new astree (symbol, lexer::loc, yytext);
-   cout << symbol << " " << get_yytname(symbol) << endl;
+   const char* tokitem = parser::get_tname(symbol);
+   printf("%-2ld %2ld.%03ld %4d  %-10s %-s\n",
+	  loc.filenr, loc.linenr, loc.offset, symbol, tokitem, yytext);
    return symbol;
 }
 
@@ -108,7 +111,3 @@ void yyerror (const char* message) {
    lexer::error() << message << endl;
 }
 
-string lexer::get_yytname(int token){
-  string strRep = parser::get_tname (token);
-  return strRep;
-}
