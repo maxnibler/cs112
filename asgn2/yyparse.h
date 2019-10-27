@@ -1,9 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.4.2.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2019 Free Software Foundation,
-   Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,9 +30,6 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
-
 #ifndef YY_YY_YYPARSE_H_INCLUDED
 # define YY_YY_YYPARSE_H_INCLUDED
 /* Debug traces.  */
@@ -49,33 +45,11 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    TOK_VOID = 258,
-    TOK_INT = 259,
-    TOK_STRING = 260,
-    TOK_IF = 261,
-    TOK_ELSE = 262,
-    TOK_WHILE = 263,
-    TOK_RETURN = 264,
-    TOK_STRUCT = 265,
-    TOK_NULLPTR = 266,
-    TOK_ARRAY = 267,
-    TOK_ARROW = 268,
-    TOK_ALLOC = 269,
-    TOK_PTR = 270,
-    TOK_EQ = 271,
-    TOK_NE = 272,
-    TOK_LT = 273,
-    TOK_LE = 274,
-    TOK_GT = 275,
-    TOK_GE = 276,
-    TOK_NOT = 277,
-    TOK_IDENT = 278,
-    TOK_INTCON = 279,
-    TOK_CHARCON = 280,
-    TOK_STRINGCON = 281,
-    TOK_ROOT = 282,
-    TOK_BLOCK = 283,
-    TOK_CALL = 284
+    ROOT = 258,
+    IDENT = 259,
+    NUMBER = 260,
+    POS = 261,
+    NEG = 262
   };
 #endif
 
