@@ -18,17 +18,20 @@
 %option noyywrap
 %option warn
 
-digit                [0-9]
-nonzero              [1-9]
-letter               [a-zA-Z_]
-mantissa        ({digit}+\.?{digit}*|\.{digit}+)
-notnumber       ({mantissa}[Ee][+-]?)
+LETTER          [A-Za-z_]
+DIGIT           [0-9]
+MANTISSA        ({DIGIT}+\.?{DIGIT}*|\.{DIGIT}+)
+EXPONENT        ([Ee][+-]?{DIGIT}+)
+NUMBER          ({MANTISSA}{EXPONENT}?)
+NOTNUMBER       ({MANTISSA}[Ee][+-]?)
+IDENT           ({LETTER}({LETTER}|{DIGIT})*)
 %%
 
 "#".*\n              { lexer::include();
                        lexer::newline();                }
 \n                   { lexer::newline();                }
 [ \t]+               { }
+
 
 "+"                  { return lexer::token('+');        }
 "-"                  { return lexer::token('-');        }
@@ -65,22 +68,26 @@ notnumber       ({mantissa}[Ee][+-]?)
 "ptr"                { return lexer::token(TOK_PTR);    }
 "void"               { return lexer::token(TOK_VOID);   }
 
-<<EOF>>                     {
-                return YYEOF;                           }
+<<EOF>>              { return YYEOF;                    }
 
-{letter}                    {
+('([^\\'\n]|\\[\\'"0nt])')  {
                 return lexer::token(TOK_CHARCON);       }
 
-{letter}({letter}|{digit})* {
+('\n')                      {
+                return lexer::token(TOK_CHARCON);       }
+
+{IDENT}                     {
                 return lexer::token(TOK_IDENT);         }
 
-{nonzero}({digit})*         {
+{NUMBER}         {
                 return lexer::token(TOK_INTCON);        }
 
-{letter}*                   {
+(\"([^\\"\n]|\\[\\’"0nt])*\")                   {
                 return lexer::token(TOK_STRINGCON);     }
 
-{notnumber}                 {
+{NOTNUMBER}                 {
                 return lexer::badtoken(TOK_INTCON);     }
+
+.                           {lexer::badtoken (*yytext); }
 %%
 
