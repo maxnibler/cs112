@@ -66,7 +66,7 @@ notnumber       ({mantissa}[Ee][+-]?)
 "void"               { return lexer::token(TOK_VOID);   }
 
 <<EOF>>                     {
-                return YYEOF;             }
+                return YYEOF;                           }
 
 {letter}                    {
                 return lexer::token(TOK_CHARCON);       }

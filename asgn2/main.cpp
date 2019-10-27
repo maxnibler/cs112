@@ -6,8 +6,8 @@
 #include <fstream>
 #include <string>
 #include <string.h>
+
 #include "string_set.h"
-//#include "yyparse.h"
 #include "lyutils.h"
 #include "auxlib.h"
 #include "astree.h"
@@ -92,8 +92,15 @@ int main(int argc, char* argv[]){
   //cout << "command=\"" << filename << "\"" << endl;
   //string filename = inFile+"r";
   yyin = popen (com.c_str(), "r");
+  int lexint;
+  string lexstr;
   while (true){
-    if (yylex() == YYEOF)break;
+    lexint = yylex();
+    if (lexint == YYEOF)break;
+    else {
+      lexstr = lexer::get_yytname(lexint);
+      cout << lexstr << endl;
+    }
   }
   preProc(yyin, filename);
   pclose(yyin);

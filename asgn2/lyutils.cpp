@@ -106,3 +106,7 @@ void yyerror (const char* message) {
    lexer::error() << message << endl;
 }
 
+string lexer::get_yytname(int token){
+  string strRep = parser::get_tname (token);
+  return strRep;
+}

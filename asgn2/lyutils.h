@@ -44,6 +44,7 @@ class lexer {
       static void fatal_error (const char* msg);
       static ostream& error();
       static void dump_filenames (ostream&);
+      static string get_yytname(int token);
 };
 
 struct parser {
