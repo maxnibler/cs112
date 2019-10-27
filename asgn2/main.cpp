@@ -50,7 +50,7 @@ void preProc(FILE* pipe, string filename){
 }
 
 void flags(int argc, char* argv[]){
-  //yy_flex_debug = 0;
+  yy_flex_debug = 0;
   //yy_debug = 0;
   string opt;
   for (int i = 1; i < argc - 1; i++){
@@ -61,7 +61,7 @@ void flags(int argc, char* argv[]){
 	break;
       }
       if (opt[1] == 'l'){
-	//yy_flex_debug = 1;
+	yy_flex_debug = 1;
 	break;
       }
       cerr << "Flag " << opt << " invalid" << endl;
@@ -92,8 +92,9 @@ int main(int argc, char* argv[]){
   //cout << "command=\"" << filename << "\"" << endl;
   //string filename = inFile+"r";
   yyin = popen (com.c_str(), "r");
-  cout << "HJFDKSHJK:\n" << yylex() << endl;
-  //cout << yylex() << endl;
+  while (true){
+    if (yylex() == YYEOF)break;
+  }
   preProc(yyin, filename);
   pclose(yyin);
   return 0;

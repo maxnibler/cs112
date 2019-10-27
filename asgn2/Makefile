@@ -35,6 +35,13 @@ $(CYGEN) $(HYGEN) : $(YSOURCES)
 clean :
 	rm $(OBJ)
 
+open :
+	emacs main.cpp&
+	emacs astree.cpp&
+	emacs scanner.l&
+	emacs astree.cpp&
+	emacs lyutils.cpp&
+
 spotless :
 	rm $(EXEC) $(OBJ)
 

@@ -20,12 +20,15 @@
 
 digit                [0-9]
 nonzero              [1-9]
-letter               [a-zA-Z]
-
+letter               [a-zA-Z_]
+mantissa        ({digit}+\.?{digit}*|\.{digit}+)
+notnumber       ({mantissa}[Ee][+-]?)
 %%
 
-"#".*\n              {  lexer::include();
-                        lexer::newline(); }
+"#".*\n              { lexer::include();
+                       lexer::newline();                }
+\n                   { lexer::newline();                }
+[ \t]+               { }
 
 "+"                  { return lexer::token('+');        }
 "-"                  { return lexer::token('-');        }
@@ -62,19 +65,22 @@ letter               [a-zA-Z]
 "ptr"                { return lexer::token(TOK_PTR);    }
 "void"               { return lexer::token(TOK_VOID);   }
 
+<<EOF>>                     {
+                return YYEOF;             }
+
+{letter}                    {
+                return lexer::token(TOK_CHARCON);       }
+
 {letter}({letter}|{digit})* {
                 return lexer::token(TOK_IDENT);         }
 
 {nonzero}({digit})*         {
                 return lexer::token(TOK_INTCON);        }
 
-{letter}                    {
-                return lexer::token(TOK_CHARCON);
-                                          }
-
 {letter}*                   {
-                return lexer::token(TOK_STRINGCON);
-                                          }
+                return lexer::token(TOK_STRINGCON);     }
 
+{notnumber}                 {
+                return lexer::badtoken(TOK_INTCON);     }
 %%
 
