@@ -22,7 +22,7 @@ void removeChar(char* line, char target){
   char* pos = line + slen - 1;
   if (*pos == target)*pos = '\0';
 }
-void preProc(FILE* pipe, string filename){
+void strProc(FILE* pipe, string filename){
   string_set strSet;
   char Buff[buffSize];
   int lineNum = 1;
@@ -69,10 +69,22 @@ void flags(int argc, char* argv[]){
   }
 }
 
+string addSuff(char* file, const char* suff){
+  string temp = file;
+  int len = temp.length();
+  bool check = false;
+  for (int i = 0; i < len ; i++){
+    if (check) file[i] = '\0';
+    if (file[i] == '.')check = true;
+  }
+  strcat(file, suff);
+  return file;
+}
+
 int main(int argc, char* argv[]){
   string com;
-  const char* suff = "str";
-  char* filename;
+  char* baseName;
+  string filestr, filetok;
   string inFile = argv[argc-1];
   if ( inFile[inFile.length()-1] != 'c' ||
        inFile[inFile.length()-2] != 'o' ||
@@ -81,12 +93,10 @@ int main(int argc, char* argv[]){
     exit(-1);
   }else{
     com = CPP + " " + inFile;
-    filename = basename(argv[argc-1]);
-    string filestr = filename;
-    int len = filestr.length();
-    filename[len - 1] = '\0';
-    filename[len - 2] = '\0';
-    strcat(filename, suff);
+    baseName = basename(argv[argc-1]);
+    filestr = addSuff(baseName, "str");
+    filetok = addSuff(baseName, "tok");
+    //cout << filetok << endl;
   }
   flags (argc, argv);
   //cout << "command=\"" << filename << "\"" << endl;
@@ -99,10 +109,10 @@ int main(int argc, char* argv[]){
     if (lexint == YYEOF)break;
     else {
       lexstr = lexer::get_yytname(lexint);
-      cout << lexstr << endl;
+      //cout << lexstr << endl;
     }
   }
-  preProc(yyin, filename);
+  strProc(yyin, filestr);
   pclose(yyin);
   return 0;
 }
