@@ -1,9 +1,9 @@
-DEPS = ${CPP} ${YYDEPS}
+DEPS = ${CDEPS} ${YYDEPS}
 YYDEPS = yylex yyparse
 CDEPS = string_set astree lyutils auxlib
-CPP = ${DEPS:=.cpp} main.cpp
-H = ${DEPS:=.h}
-OBJ = ${DEPS:=.o}
+CPP = ${CDEPS:=.cpp} main.cpp
+HEAD = ${CDEPS:=.h}
+OBJ = ${DEPS:=.o} main.o
 GPP = g++ -std=gnu++2a -g -O0
 EXEC = oc
 YY = -Wno-sign-compare -Wno-register
@@ -61,5 +61,5 @@ test :
 
 submit :
 	submit cse110a-wm.f19 asg2 Makefile README $(LSOURCES) $(YSOURCES)
-	submit cse110a-wm.f19 asg2 $(CPP) $(H)
+	submit cse110a-wm.f19 asg2 $(CPP) $(HEAD)
 
