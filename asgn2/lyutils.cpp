@@ -13,6 +13,7 @@ using namespace std;
 #include "auxlib.h"
 #include "lyutils.h"
 
+FILE* tokfile;
 bool lexer::interactive = true;
 location lexer::loc = {.filenr=0, .linenr=1, .offset=0};
 size_t lexer::last_yyleng = 0;
@@ -76,6 +77,7 @@ void lexer::include() {
 
 int lexer::token (int symbol) {
    yylval = new astree (symbol, lexer::loc, yytext);
+   cout << symbol << " " << get_yytname(symbol) << endl;
    return symbol;
 }
 

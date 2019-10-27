@@ -51,7 +51,7 @@ void strProc(FILE* pipe, string filename){
 
 void flags(int argc, char* argv[]){
   yy_flex_debug = 0;
-  //yy_debug = 0;
+  yydebug = 0;
   string opt;
   for (int i = 1; i < argc - 1; i++){
     opt = argv[i];
@@ -96,11 +96,10 @@ int main(int argc, char* argv[]){
     baseName = basename(argv[argc-1]);
     filestr = addSuff(baseName, "str");
     filetok = addSuff(baseName, "tok");
+    tokfile = fopen(filetok.c_str(), "wb");
     //cout << filetok << endl;
   }
   flags (argc, argv);
-  //cout << "command=\"" << filename << "\"" << endl;
-  //string filename = inFile+"r";
   yyin = popen (com.c_str(), "r");
   int lexint;
   string lexstr;
@@ -109,7 +108,7 @@ int main(int argc, char* argv[]){
     if (lexint == YYEOF)break;
     else {
       lexstr = lexer::get_yytname(lexint);
-      //cout << lexstr << endl;
+      //cout << lexint << endl;
     }
   }
   strProc(yyin, filestr);
