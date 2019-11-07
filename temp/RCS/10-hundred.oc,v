@@ -1,0 +1,54 @@
+head	1.2;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.2
+date	2019.04.17.20.23.14;	author -;	state -;
+branches;
+next	1.1;
+
+1.1
+date	2019.04.16.19.14.45;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@-
+@
+text
+@// $Id: 10-hundred.oc,v 1.1 2019-04-16 12:14:45-07 - - $
+
+#include "oclib.h"
+
+int main() {
+   int count = 0;
+   while (count < 16) {
+      count = count + 1;
+      putint (count);
+      putchr ('\n');
+   }
+   return SUCCESS;
+}
+
+@
+
+
+1.1
+log
+@-
+@
+text
+@d1 1
+a1 1
+// $Id: 10-hundred.oc,v 1.1 2019-04-16 12:00:08-07 - - $
+d14 1
+@

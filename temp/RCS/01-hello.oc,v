@@ -1,0 +1,33 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.1
+date	2019.04.16.19.14.45;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@// $Id: 01-hello.oc,v 1.1 2019-04-16 12:00:07-07 - - $
+// Simple hello world program.
+
+#include "oclib.h"
+
+int main() {
+   putstr ("Hello, world!\n");
+   return SUCCESS;
+}
+
+@

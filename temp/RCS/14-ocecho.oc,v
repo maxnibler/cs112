@@ -1,0 +1,38 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.1
+date	2019.04.16.19.14.45;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@// $Id: 14-ocecho.oc,v 1.1 2019-04-16 12:00:09-07 - - $
+
+#include "oclib.h"
+
+int main(int argc, array<string> argv) {
+   int argi = 1;
+   while (argi < argc) {
+      if (argi > 1) putchr (' ');
+      putstr (argv[argi]);
+      argi = argi + 1;
+   }
+   putstr ("\n");
+   return SUCCESS;
+}
+
+@

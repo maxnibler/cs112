@@ -1,0 +1,51 @@
+head	1.2;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.2
+date	2019.04.16.20.14.01;	author -;	state -;
+branches;
+next	1.1;
+
+1.1
+date	2019.04.16.19.14.45;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@-
+@
+text
+@// $Id: 07-assert.oc,v 1.1 2019-04-16 12:14:45-07 - - $
+
+#include "oclib.h"
+
+int main() {
+   assert ("nullptr" == nullptr);
+   return FAILURE;
+}
+
+@
+
+
+1.1
+log
+@-
+@
+text
+@d1 1
+a1 1
+// $Id: 07-assert.oc,v 1.1 2019-04-16 12:00:08-07 - - $
+d7 1
+a7 1
+   return SUCCESS;
+@
