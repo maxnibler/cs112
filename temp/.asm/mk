@@ -1,7 +1,0 @@
-#!/bin/sh -x
-# $Id: mk,v 1.15 2019-05-03 15:59:32-07 - - $
-cid + $0
-gcc -S -O3 ../oclib.c
-gcc -c oclib.s
-nm -a oclib.o >oclib.nm
-mkpspdf Listing.ps ../oclib.h ../octypes.h ../oclib.c oclib.nm oclib.s
