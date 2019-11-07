@@ -61,5 +61,5 @@ test :
 
 submit :
 	submit cse110a-wm.f19 asg2 Makefile README $(LSOURCES)
-	submit cse110a-wm.f19 asg2 $(CPP) $(HEAD) $(YSOURCES)
+	submit cse110a-wm.f19 asg2 $(CPP) $(HEAD) $(YSOURCES) $(HYGEN)
 
