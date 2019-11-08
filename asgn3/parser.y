@@ -30,17 +30,24 @@ using namespace std;
 
 %%
 
-start   : program              { $$ = $1 = nullptr; }
-        ;
-program : program token | ;
-token   : '(' | ')' | '[' | ']' | '{' | '}' | ';' | ','
-        | '=' | '+' | '-' | '*' | '/' | '%' | TOK_NOT | TOK_PTR
-        | TOK_ROOT TOK_VOID | TOK_INT | TOK_STRING
-        | TOK_IF | TOK_ELSE | TOK_WHILE | TOK_RETURN | TOK_STRUCT
-        | TOK_NULLPTR | TOK_ARRAY | TOK_ARROW | TOK_ALLOC
-        | TOK_EQ | TOK_NE | TOK_LT | TOK_LE | TOK_GT | TOK_GE
-        | TOK_IDENT | TOK_INTCON | TOK_CHARCON | TOK_STRINGCON
-        ;
+start     : program              { $$ = $1 = nullptr;      }
+          ;
+program   : program structdef    { $$ = $1->adopt ($2);    }
+          | program error '}'    { $$ = $1;                }
+          | program error ';'    { $$ = $1;                }
+          | program token
+	  |                      { $$ = parser::root;      }
+	  ;
+structdef : structdef TOK_IDENT  { $$ = $1->adopt ($2);    }
+          ;
+token     : '(' | ')' | '[' | ']' | '{' | '}' | ';' | ','
+          | '=' | '+' | '-' | '*' | '/' | '%' | TOK_NOT | TOK_PTR
+          | TOK_ROOT TOK_VOID | TOK_INT | TOK_STRING
+          | TOK_IF | TOK_ELSE | TOK_WHILE | TOK_RETURN 
+          | TOK_NULLPTR | TOK_ARRAY | TOK_ARROW | TOK_ALLOC
+          | TOK_EQ | TOK_NE | TOK_LT | TOK_LE | TOK_GT | TOK_GE
+          | TOK_IDENT | TOK_INTCON | TOK_CHARCON | TOK_STRINGCON
+          ;
 
 %%
 

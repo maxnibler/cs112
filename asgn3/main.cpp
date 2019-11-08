@@ -101,16 +101,17 @@ int main(int argc, char* argv[]){
   }
   flags (argc, argv);
   yyin = popen (com.c_str(), "r");
-  int lexint;
+  //int lexint;
   string lexstr;
-  while (true){
+  yyparse();
+  /*  while (true){
     lexint = yylex();
     if (lexint == YYEOF)break;
     else {
       //lexstr = lexer::get_yytname(lexint);
       //cout << lexint << endl;
     }
-  }
+  }*/
   strProc(yyin, filestr);
   pclose(yyin);
   return 0;
