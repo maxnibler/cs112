@@ -1,116 +1,129 @@
 Nonterminals useless in grammar
 
     start
-    structdef
 
 
 Terminals unused in grammar
 
-    TOK_STRUCT
     TOK_BLOCK
     TOK_CALL
 
 
 Rules useless in grammar
 
-   42 start: program
+   48 start: program
 
-   43 program: program structdef
 
-   44 structdef: structdef TOK_IDENT
+Rules useless in parser due to conflicts
+
+   10 structdef: %empty
+
+   12 plaintype: %empty
+
+
+State 1 conflicts: 40 shift/reduce, 1 reduce/reduce
 
 
 Grammar
 
     0 $accept: program $end
 
-    1 program: program error '}'
-    2        | program error ';'
-    3        | program token
-    4        | %empty
+    1 program: program structdef
+    2        | program error '}'
+    3        | program error ';'
+    4        | program token
+    5        | %empty
 
-    5 token: '('
-    6      | ')'
-    7      | '['
-    8      | ']'
-    9      | '{'
-   10      | '}'
-   11      | ';'
-   12      | ','
-   13      | '='
-   14      | '+'
-   15      | '-'
-   16      | '*'
-   17      | '/'
-   18      | '%'
-   19      | TOK_NOT
-   20      | TOK_PTR
-   21      | TOK_ROOT TOK_VOID
-   22      | TOK_INT
-   23      | TOK_STRING
-   24      | TOK_IF
-   25      | TOK_ELSE
-   26      | TOK_WHILE
-   27      | TOK_RETURN
-   28      | TOK_NULLPTR
-   29      | TOK_ARRAY
-   30      | TOK_ARROW
-   31      | TOK_ALLOC
-   32      | TOK_EQ
-   33      | TOK_NE
-   34      | TOK_LT
-   35      | TOK_LE
-   36      | TOK_GT
-   37      | TOK_GE
-   38      | TOK_IDENT
-   39      | TOK_INTCON
-   40      | TOK_CHARCON
-   41      | TOK_STRINGCON
+    6 structdef: TOK_STRUCT TOK_IDENT
+    7          | '{'
+    8          | type TOK_IDENT
+    9          | '}'
+   10          | %empty
+
+   11 type: plaintype
+
+   12 plaintype: %empty
+
+   13 token: '('
+   14      | ')'
+   15      | '['
+   16      | ']'
+   17      | ';'
+   18      | ','
+   19      | '='
+   20      | '+'
+   21      | '-'
+   22      | '*'
+   23      | '/'
+   24      | '%'
+   25      | TOK_NOT
+   26      | TOK_PTR
+   27      | TOK_ROOT TOK_VOID
+   28      | TOK_INT
+   29      | TOK_STRING
+   30      | TOK_IF
+   31      | TOK_ELSE
+   32      | TOK_WHILE
+   33      | TOK_RETURN
+   34      | TOK_NULLPTR
+   35      | TOK_ARRAY
+   36      | TOK_ARROW
+   37      | TOK_ALLOC
+   38      | TOK_EQ
+   39      | TOK_NE
+   40      | TOK_LT
+   41      | TOK_LE
+   42      | TOK_GT
+   43      | TOK_GE
+   44      | TOK_IDENT
+   45      | TOK_INTCON
+   46      | TOK_CHARCON
+   47      | TOK_STRINGCON
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
-    '%' (37) 18
-    '(' (40) 5
-    ')' (41) 6
-    '*' (42) 16
-    '+' (43) 14
-    ',' (44) 12
-    '-' (45) 15
-    '/' (47) 17
-    ';' (59) 2 11
-    '=' (61) 13
-    '[' (91) 7
-    ']' (93) 8
-    '{' (123) 9
-    '}' (125) 1 10
-    error (256) 1 2
-    TOK_VOID (258) 21
-    TOK_INT (259) 22
-    TOK_STRING (260) 23
-    TOK_IF (261) 24
-    TOK_ELSE (262) 25
-    TOK_WHILE (263) 26
-    TOK_RETURN (264) 27
-    TOK_STRUCT (265)
-    TOK_NULLPTR (266) 28
-    TOK_ARRAY (267) 29
-    TOK_ARROW (268) 30
-    TOK_ALLOC (269) 31
-    TOK_PTR (270) 20
-    TOK_EQ (271) 32
-    TOK_NE (272) 33
-    TOK_LT (273) 34
-    TOK_LE (274) 35
-    TOK_GT (275) 36
-    TOK_GE (276) 37
-    TOK_NOT (277) 19
-    TOK_IDENT (278) 38
-    TOK_INTCON (279) 39
-    TOK_CHARCON (280) 40
-    TOK_STRINGCON (281) 41
-    TOK_ROOT (282) 21
+    '%' (37) 24
+    '(' (40) 13
+    ')' (41) 14
+    '*' (42) 22
+    '+' (43) 20
+    ',' (44) 18
+    '-' (45) 21
+    '/' (47) 23
+    ';' (59) 3 17
+    '=' (61) 19
+    '[' (91) 15
+    ']' (93) 16
+    '{' (123) 7
+    '}' (125) 2 9
+    error (256) 2 3
+    TOK_VOID (258) 27
+    TOK_INT (259) 28
+    TOK_STRING (260) 29
+    TOK_IF (261) 30
+    TOK_ELSE (262) 31
+    TOK_WHILE (263) 32
+    TOK_RETURN (264) 33
+    TOK_STRUCT (265) 6
+    TOK_NULLPTR (266) 34
+    TOK_ARRAY (267) 35
+    TOK_ARROW (268) 36
+    TOK_ALLOC (269) 37
+    TOK_PTR (270) 26
+    TOK_EQ (271) 38
+    TOK_NE (272) 39
+    TOK_LT (273) 40
+    TOK_LE (274) 41
+    TOK_GT (275) 42
+    TOK_GE (276) 43
+    TOK_NOT (277) 25
+    TOK_IDENT (278) 6 8 44
+    TOK_INTCON (279) 45
+    TOK_CHARCON (280) 46
+    TOK_STRINGCON (281) 47
+    TOK_ROOT (282) 27
     TOK_BLOCK (283)
     TOK_CALL (284)
 
@@ -120,18 +133,27 @@ Nonterminals, with rules where they appear
     $accept (44)
         on left: 0
     program (45)
-        on left: 1 2 3 4
-        on right: 0 1 2 3
-    token (46)
-        on left: 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41
-        on right: 3
+        on left: 1 2 3 4 5
+        on right: 0 1 2 3 4
+    structdef (46)
+        on left: 6 7 8 9 10
+        on right: 1
+    type (47)
+        on left: 11
+        on right: 8
+    plaintype (48)
+        on left: 12
+        on right: 11
+    token (49)
+        on left: 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
+        on right: 4
 
 
 State 0
 
     0 $accept: . program $end
 
-    $default  reduce using rule 4 (program)
+    $default  reduce using rule 5 (program)
 
     program  go to state 1
 
@@ -139,9 +161,10 @@ State 0
 State 1
 
     0 $accept: program . $end
-    1 program: program . error '}'
-    2        | program . error ';'
-    3        | program . token
+    1 program: program . structdef
+    2        | program . error '}'
+    3        | program . error ';'
+    4        | program . token
 
     $end           shift, and go to state 2
     error          shift, and go to state 3
@@ -151,39 +174,85 @@ State 1
     TOK_ELSE       shift, and go to state 7
     TOK_WHILE      shift, and go to state 8
     TOK_RETURN     shift, and go to state 9
-    TOK_NULLPTR    shift, and go to state 10
-    TOK_ARRAY      shift, and go to state 11
-    TOK_ARROW      shift, and go to state 12
-    TOK_ALLOC      shift, and go to state 13
-    TOK_PTR        shift, and go to state 14
-    TOK_EQ         shift, and go to state 15
-    TOK_NE         shift, and go to state 16
-    TOK_LT         shift, and go to state 17
-    TOK_LE         shift, and go to state 18
-    TOK_GT         shift, and go to state 19
-    TOK_GE         shift, and go to state 20
-    TOK_NOT        shift, and go to state 21
-    TOK_IDENT      shift, and go to state 22
-    TOK_INTCON     shift, and go to state 23
-    TOK_CHARCON    shift, and go to state 24
-    TOK_STRINGCON  shift, and go to state 25
-    TOK_ROOT       shift, and go to state 26
-    '}'            shift, and go to state 27
-    ';'            shift, and go to state 28
-    '('            shift, and go to state 29
-    ')'            shift, and go to state 30
-    '['            shift, and go to state 31
-    ']'            shift, and go to state 32
-    '{'            shift, and go to state 33
-    ','            shift, and go to state 34
-    '='            shift, and go to state 35
-    '+'            shift, and go to state 36
-    '-'            shift, and go to state 37
-    '*'            shift, and go to state 38
-    '/'            shift, and go to state 39
-    '%'            shift, and go to state 40
+    TOK_STRUCT     shift, and go to state 10
+    TOK_NULLPTR    shift, and go to state 11
+    TOK_ARRAY      shift, and go to state 12
+    TOK_ARROW      shift, and go to state 13
+    TOK_ALLOC      shift, and go to state 14
+    TOK_PTR        shift, and go to state 15
+    TOK_EQ         shift, and go to state 16
+    TOK_NE         shift, and go to state 17
+    TOK_LT         shift, and go to state 18
+    TOK_LE         shift, and go to state 19
+    TOK_GT         shift, and go to state 20
+    TOK_GE         shift, and go to state 21
+    TOK_NOT        shift, and go to state 22
+    TOK_IDENT      shift, and go to state 23
+    TOK_INTCON     shift, and go to state 24
+    TOK_CHARCON    shift, and go to state 25
+    TOK_STRINGCON  shift, and go to state 26
+    TOK_ROOT       shift, and go to state 27
+    '}'            shift, and go to state 28
+    ';'            shift, and go to state 29
+    '{'            shift, and go to state 30
+    '('            shift, and go to state 31
+    ')'            shift, and go to state 32
+    '['            shift, and go to state 33
+    ']'            shift, and go to state 34
+    ','            shift, and go to state 35
+    '='            shift, and go to state 36
+    '+'            shift, and go to state 37
+    '-'            shift, and go to state 38
+    '*'            shift, and go to state 39
+    '/'            shift, and go to state 40
+    '%'            shift, and go to state 41
 
-    token  go to state 41
+    $end           [reduce using rule 10 (structdef)]
+    error          [reduce using rule 10 (structdef)]
+    TOK_INT        [reduce using rule 10 (structdef)]
+    TOK_STRING     [reduce using rule 10 (structdef)]
+    TOK_IF         [reduce using rule 10 (structdef)]
+    TOK_ELSE       [reduce using rule 10 (structdef)]
+    TOK_WHILE      [reduce using rule 10 (structdef)]
+    TOK_RETURN     [reduce using rule 10 (structdef)]
+    TOK_STRUCT     [reduce using rule 10 (structdef)]
+    TOK_NULLPTR    [reduce using rule 10 (structdef)]
+    TOK_ARRAY      [reduce using rule 10 (structdef)]
+    TOK_ARROW      [reduce using rule 10 (structdef)]
+    TOK_ALLOC      [reduce using rule 10 (structdef)]
+    TOK_PTR        [reduce using rule 10 (structdef)]
+    TOK_EQ         [reduce using rule 10 (structdef)]
+    TOK_NE         [reduce using rule 10 (structdef)]
+    TOK_LT         [reduce using rule 10 (structdef)]
+    TOK_LE         [reduce using rule 10 (structdef)]
+    TOK_GT         [reduce using rule 10 (structdef)]
+    TOK_GE         [reduce using rule 10 (structdef)]
+    TOK_NOT        [reduce using rule 10 (structdef)]
+    TOK_IDENT      [reduce using rule 10 (structdef)]
+    TOK_IDENT      [reduce using rule 12 (plaintype)]
+    TOK_INTCON     [reduce using rule 10 (structdef)]
+    TOK_CHARCON    [reduce using rule 10 (structdef)]
+    TOK_STRINGCON  [reduce using rule 10 (structdef)]
+    TOK_ROOT       [reduce using rule 10 (structdef)]
+    '}'            [reduce using rule 10 (structdef)]
+    ';'            [reduce using rule 10 (structdef)]
+    '{'            [reduce using rule 10 (structdef)]
+    '('            [reduce using rule 10 (structdef)]
+    ')'            [reduce using rule 10 (structdef)]
+    '['            [reduce using rule 10 (structdef)]
+    ']'            [reduce using rule 10 (structdef)]
+    ','            [reduce using rule 10 (structdef)]
+    '='            [reduce using rule 10 (structdef)]
+    '+'            [reduce using rule 10 (structdef)]
+    '-'            [reduce using rule 10 (structdef)]
+    '*'            [reduce using rule 10 (structdef)]
+    '/'            [reduce using rule 10 (structdef)]
+    '%'            [reduce using rule 10 (structdef)]
+
+    structdef  go to state 42
+    type       go to state 43
+    plaintype  go to state 44
+    token      go to state 45
 
 
 State 2
@@ -195,295 +264,337 @@ State 2
 
 State 3
 
-    1 program: program error . '}'
-    2        | program error . ';'
+    2 program: program error . '}'
+    3        | program error . ';'
 
-    '}'  shift, and go to state 42
-    ';'  shift, and go to state 43
+    '}'  shift, and go to state 46
+    ';'  shift, and go to state 47
 
 
 State 4
 
-   22 token: TOK_INT .
-
-    $default  reduce using rule 22 (token)
-
-
-State 5
-
-   23 token: TOK_STRING .
-
-    $default  reduce using rule 23 (token)
-
-
-State 6
-
-   24 token: TOK_IF .
-
-    $default  reduce using rule 24 (token)
-
-
-State 7
-
-   25 token: TOK_ELSE .
-
-    $default  reduce using rule 25 (token)
-
-
-State 8
-
-   26 token: TOK_WHILE .
-
-    $default  reduce using rule 26 (token)
-
-
-State 9
-
-   27 token: TOK_RETURN .
-
-    $default  reduce using rule 27 (token)
-
-
-State 10
-
-   28 token: TOK_NULLPTR .
+   28 token: TOK_INT .
 
     $default  reduce using rule 28 (token)
 
 
-State 11
+State 5
 
-   29 token: TOK_ARRAY .
+   29 token: TOK_STRING .
 
     $default  reduce using rule 29 (token)
 
 
-State 12
+State 6
 
-   30 token: TOK_ARROW .
+   30 token: TOK_IF .
 
     $default  reduce using rule 30 (token)
 
 
-State 13
+State 7
 
-   31 token: TOK_ALLOC .
+   31 token: TOK_ELSE .
 
     $default  reduce using rule 31 (token)
 
 
-State 14
+State 8
 
-   20 token: TOK_PTR .
-
-    $default  reduce using rule 20 (token)
-
-
-State 15
-
-   32 token: TOK_EQ .
+   32 token: TOK_WHILE .
 
     $default  reduce using rule 32 (token)
 
 
-State 16
+State 9
 
-   33 token: TOK_NE .
+   33 token: TOK_RETURN .
 
     $default  reduce using rule 33 (token)
 
 
-State 17
+State 10
 
-   34 token: TOK_LT .
+    6 structdef: TOK_STRUCT . TOK_IDENT
+
+    TOK_IDENT  shift, and go to state 48
+
+
+State 11
+
+   34 token: TOK_NULLPTR .
 
     $default  reduce using rule 34 (token)
 
 
-State 18
+State 12
 
-   35 token: TOK_LE .
+   35 token: TOK_ARRAY .
 
     $default  reduce using rule 35 (token)
 
 
-State 19
+State 13
 
-   36 token: TOK_GT .
+   36 token: TOK_ARROW .
 
     $default  reduce using rule 36 (token)
 
 
-State 20
+State 14
 
-   37 token: TOK_GE .
+   37 token: TOK_ALLOC .
 
     $default  reduce using rule 37 (token)
 
 
-State 21
+State 15
 
-   19 token: TOK_NOT .
+   26 token: TOK_PTR .
 
-    $default  reduce using rule 19 (token)
+    $default  reduce using rule 26 (token)
 
 
-State 22
+State 16
 
-   38 token: TOK_IDENT .
+   38 token: TOK_EQ .
 
     $default  reduce using rule 38 (token)
 
 
-State 23
+State 17
 
-   39 token: TOK_INTCON .
+   39 token: TOK_NE .
 
     $default  reduce using rule 39 (token)
 
 
-State 24
+State 18
 
-   40 token: TOK_CHARCON .
+   40 token: TOK_LT .
 
     $default  reduce using rule 40 (token)
 
 
-State 25
+State 19
 
-   41 token: TOK_STRINGCON .
+   41 token: TOK_LE .
 
     $default  reduce using rule 41 (token)
 
 
+State 20
+
+   42 token: TOK_GT .
+
+    $default  reduce using rule 42 (token)
+
+
+State 21
+
+   43 token: TOK_GE .
+
+    $default  reduce using rule 43 (token)
+
+
+State 22
+
+   25 token: TOK_NOT .
+
+    $default  reduce using rule 25 (token)
+
+
+State 23
+
+   44 token: TOK_IDENT .
+
+    $default  reduce using rule 44 (token)
+
+
+State 24
+
+   45 token: TOK_INTCON .
+
+    $default  reduce using rule 45 (token)
+
+
+State 25
+
+   46 token: TOK_CHARCON .
+
+    $default  reduce using rule 46 (token)
+
+
 State 26
 
-   21 token: TOK_ROOT . TOK_VOID
+   47 token: TOK_STRINGCON .
 
-    TOK_VOID  shift, and go to state 44
+    $default  reduce using rule 47 (token)
 
 
 State 27
 
-   10 token: '}' .
+   27 token: TOK_ROOT . TOK_VOID
 
-    $default  reduce using rule 10 (token)
+    TOK_VOID  shift, and go to state 49
 
 
 State 28
 
-   11 token: ';' .
+    9 structdef: '}' .
 
-    $default  reduce using rule 11 (token)
+    $default  reduce using rule 9 (structdef)
 
 
 State 29
 
-    5 token: '(' .
-
-    $default  reduce using rule 5 (token)
-
-
-State 30
-
-    6 token: ')' .
-
-    $default  reduce using rule 6 (token)
-
-
-State 31
-
-    7 token: '[' .
-
-    $default  reduce using rule 7 (token)
-
-
-State 32
-
-    8 token: ']' .
-
-    $default  reduce using rule 8 (token)
-
-
-State 33
-
-    9 token: '{' .
-
-    $default  reduce using rule 9 (token)
-
-
-State 34
-
-   12 token: ',' .
-
-    $default  reduce using rule 12 (token)
-
-
-State 35
-
-   13 token: '=' .
-
-    $default  reduce using rule 13 (token)
-
-
-State 36
-
-   14 token: '+' .
-
-    $default  reduce using rule 14 (token)
-
-
-State 37
-
-   15 token: '-' .
-
-    $default  reduce using rule 15 (token)
-
-
-State 38
-
-   16 token: '*' .
-
-    $default  reduce using rule 16 (token)
-
-
-State 39
-
-   17 token: '/' .
+   17 token: ';' .
 
     $default  reduce using rule 17 (token)
 
 
-State 40
+State 30
 
-   18 token: '%' .
+    7 structdef: '{' .
+
+    $default  reduce using rule 7 (structdef)
+
+
+State 31
+
+   13 token: '(' .
+
+    $default  reduce using rule 13 (token)
+
+
+State 32
+
+   14 token: ')' .
+
+    $default  reduce using rule 14 (token)
+
+
+State 33
+
+   15 token: '[' .
+
+    $default  reduce using rule 15 (token)
+
+
+State 34
+
+   16 token: ']' .
+
+    $default  reduce using rule 16 (token)
+
+
+State 35
+
+   18 token: ',' .
 
     $default  reduce using rule 18 (token)
 
 
+State 36
+
+   19 token: '=' .
+
+    $default  reduce using rule 19 (token)
+
+
+State 37
+
+   20 token: '+' .
+
+    $default  reduce using rule 20 (token)
+
+
+State 38
+
+   21 token: '-' .
+
+    $default  reduce using rule 21 (token)
+
+
+State 39
+
+   22 token: '*' .
+
+    $default  reduce using rule 22 (token)
+
+
+State 40
+
+   23 token: '/' .
+
+    $default  reduce using rule 23 (token)
+
+
 State 41
 
-    3 program: program token .
+   24 token: '%' .
 
-    $default  reduce using rule 3 (program)
+    $default  reduce using rule 24 (token)
 
 
 State 42
 
-    1 program: program error '}' .
+    1 program: program structdef .
 
     $default  reduce using rule 1 (program)
 
 
 State 43
 
-    2 program: program error ';' .
+    8 structdef: type . TOK_IDENT
 
-    $default  reduce using rule 2 (program)
+    TOK_IDENT  shift, and go to state 50
 
 
 State 44
 
-   21 token: TOK_ROOT TOK_VOID .
+   11 type: plaintype .
 
-    $default  reduce using rule 21 (token)
+    $default  reduce using rule 11 (type)
+
+
+State 45
+
+    4 program: program token .
+
+    $default  reduce using rule 4 (program)
+
+
+State 46
+
+    2 program: program error '}' .
+
+    $default  reduce using rule 2 (program)
+
+
+State 47
+
+    3 program: program error ';' .
+
+    $default  reduce using rule 3 (program)
+
+
+State 48
+
+    6 structdef: TOK_STRUCT TOK_IDENT .
+
+    $default  reduce using rule 6 (structdef)
+
+
+State 49
+
+   27 token: TOK_ROOT TOK_VOID .
+
+    $default  reduce using rule 27 (token)
+
+
+State 50
+
+    8 structdef: type TOK_IDENT .
+
+    $default  reduce using rule 8 (structdef)

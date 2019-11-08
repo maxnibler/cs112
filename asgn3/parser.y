@@ -30,17 +30,22 @@ using namespace std;
 
 %%
 
-start     : program              { $$ = $1 = nullptr;      }
+start     : program              { $$ = parser::root;       }
           ;
-program   : program structdef    { $$ = $1->adopt ($2);    }
-          | program error '}'    { $$ = $1;                }
-          | program error ';'    { $$ = $1;                }
+program   : program structdef    { $$ = $1->adopt ($2);     }
+          | program error '}'    { $$ = $1;                 }
+          | program error ';'    { $$ = $1;                 }
           | program token
-	  |                      { $$ = parser::root;      }
+	  |                      { $$ = parser::root;       }
 	  ;
-structdef : structdef TOK_IDENT  { $$ = $1->adopt ($2);    }
+structdef : TOK_STRUCT TOK_IDENT  { $$ = $1->adopt ($2);    }
+          | '{' | type TOK_IDENT | '}' |
           ;
-token     : '(' | ')' | '[' | ']' | '{' | '}' | ';' | ','
+type      : plaintype
+          ;
+plaintype : 
+          ;
+token     : '(' | ')' | '[' | ']' | ';' | ','
           | '=' | '+' | '-' | '*' | '/' | '%' | TOK_NOT | TOK_PTR
           | TOK_ROOT TOK_VOID | TOK_INT | TOK_STRING
           | TOK_IF | TOK_ELSE | TOK_WHILE | TOK_RETURN 
