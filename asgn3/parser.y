@@ -33,13 +33,20 @@ using namespace std;
 start     : program              { $$ = parser::root;       }
           ;
 program   : program structdef    { $$ = $1->adopt ($2);     }
+          | program vardecl      { $$ = $1->adopt ($2);     }
           | program error '}'    { $$ = $1;                 }
           | program error ';'    { $$ = $1;                 }
-          | program token
+          | program token        { $$ = $1->adopt ($2); }
 	  |                      { $$ = parser::root;       }
 	  ;
+vardecl   : type TOK_IDENT
+          | type TOK_IDENT '=' expr
+            { destroy($3); $$ = $1->adopt ($4);}
+          ;
+expr      : expr token
+          ;
 structdef : TOK_STRUCT TOK_IDENT '{' type TOK_IDENT '}' ';'
-{ destroy($2); destroy($5, $6); $$ = $1->adopt ($3, $4); }
+{ destroy($2); destroy($5, $6); $3 = $4; $$ = $1; }
           ;
 type      : plaintype
           | TOK_ARRAY '[' plaintype ']'
@@ -48,7 +55,7 @@ plaintype : TOK_INT
           | TOK_STRING
           | TOK_PTR 
           ;
-token     : '(' | ')' | '[' | ']' | ','
+token     : '(' | ')' | '[' | ']' | ',' | '}' | '{' | ';'
           | '=' | '+' | '-' | '*' | '/' | '%' | TOK_NOT | TOK_PTR
           | TOK_ROOT TOK_VOID | TOK_INT | TOK_STRING
           | TOK_IF | TOK_ELSE | TOK_WHILE | TOK_RETURN 
