@@ -43,7 +43,12 @@ vardecl   : type TOK_IDENT
           | type TOK_IDENT '=' expr
             { destroy($3); $$ = $1->adopt ($4);}
           ;
-expr      : expr token
+expr      : expr '+' expr
+|expr '-' expr
+|expr '*' expr
+|expr '/' expr
+|expr '%' expr
+|
           ;
 structdef : TOK_STRUCT TOK_IDENT '{' type TOK_IDENT '}' ';'
 { destroy($2); destroy($5, $6); $3 = $4; $$ = $1; }
