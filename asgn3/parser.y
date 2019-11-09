@@ -40,17 +40,30 @@ using namespace std;
 start     : program              { $$ = $1 = nullptr;       }
           ;
 program   : program structdef    { $$ = $1->adopt ($2);     }
-          | program function     { cout << "Function" << endl;
-                                   $$ = $1->adopt ($2);     }
+          | program function     { $$ = $1->adopt ($2);     }
           | program vardecl      { $$ = $1->adopt ($2);     }
           | program error '}'    { $$ = $1;                 }
           | program error ';'    { $$ = $1;                 }
-          | program token        { $$ = $1->adopt ($2);     }
 	  | %empty               { $$ = parser::root;       }
 	  ;
+type      : plaintype
+          | TOK_ARRAY
+          ;
+returntype: TOK_INT
+          | TOK_STRING
+          | TOK_PTR
+          | TOK_VOID
+          ;
+plaintype : TOK_INT
+          | TOK_STRING
+          | TOK_PTR 
+          ;
+function  : returntype TOK_IDENT '(' ')' block
+{ $$ = $1->adopt($2, $5); destroy($3, $4); cout << "function" << endl;}
+          ;
 vardecl   : type TOK_IDENT ';'   { destroy($3); $$ = $1;}
           | type TOK_IDENT '=' expr ';'
-           { destroy($3, $5); $$ = $1->adopt ($2); $$ = $1->adopt($4);}
+	  { destroy($3, $5); $$ = $1->adopt ($2); $$ = $1->adopt($4);}
           ;
 expr      : expr '+' expr { $$ = $2->adopt($1, $3);}
           | expr '-' expr { $$ = $2->adopt($1, $3);}
@@ -65,15 +78,14 @@ constant  : TOK_INTCON
           | TOK_STRINGCON
           | TOK_CHARCON
           ;
-function  : returntype TOK_IDENT '(' ')' block
-           { $$ = $1->adopt($2, $5); destroy($3, $4); }
-          ;
 call      : TOK_IDENT '(' expr ')' { $$ = $1->adopt($3); }
           ;
 block     : '{' statement '}' { $$ = $1->adopt($2); destroy($3);}
+| '{' statement statement '}' { $$ = $1->adopt($2, $3); destroy($4);}
+          | ';' { destroy($1); }
           ;
-statement : vardecl  
-          | block    
+statement : vardecl  {cout << "vardecl" << endl; }
+          | block 
 	  | expr ';' { destroy($2); }
           ;
 variable  : TOK_IDENT
@@ -83,18 +95,9 @@ variable  : TOK_IDENT
 structdef : TOK_STRUCT TOK_IDENT '{' type TOK_IDENT '}' ';'
            { destroy($2); destroy($5, $6); $3 = $4; $$ = $1; }
           ;
-type      : plaintype 
-          ;
-plaintype : TOK_INT
-          | TOK_STRING
-          | TOK_PTR 
-          ;
-returntype: plaintype 
-          | TOK_VOID
-          ;
-token     : '(' | ')' | '[' | ']' | ',' | '}' | '{' | ';'
+token     : '[' | ']' | ',' | '}' | '{' | ';'
           | '=' | '+' | '-' | '*' | '/' | '%' | TOK_NOT | TOK_PTR
-          | TOK_ROOT TOK_VOID | TOK_INT | TOK_STRING
+          | TOK_ROOT | TOK_VOID | TOK_INT | TOK_STRING
           | TOK_IF | TOK_ELSE | TOK_WHILE | TOK_RETURN 
           | TOK_NULLPTR | TOK_ARRAY | TOK_ARROW | TOK_ALLOC
           | TOK_EQ | TOK_NE | TOK_LT | TOK_LE | TOK_GT | TOK_GE
