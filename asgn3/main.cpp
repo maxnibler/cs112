@@ -84,7 +84,8 @@ string addSuff(char* file, const char* suff){
 int main(int argc, char* argv[]){
   string com;
   char* baseName;
-  string filestr, filetok;
+  string filestr, filetok, fileast;
+  filebuf buffer;
   string inFile = argv[argc-1];
   if ( inFile[inFile.length()-1] != 'c' ||
        inFile[inFile.length()-2] != 'o' ||
@@ -96,6 +97,7 @@ int main(int argc, char* argv[]){
     baseName = basename(argv[argc-1]);
     filestr = addSuff(baseName, "str");
     filetok = addSuff(baseName, "tok");
+    fileast = addSuff(baseName, "ast");
     tokfile = fopen(filetok.c_str(), "wb");
     //cout << filetok << endl;
   }
@@ -104,6 +106,10 @@ int main(int argc, char* argv[]){
   //int lexint;
   string lexstr;
   yyparse();
+  buffer.open(fileast, std::ios::out);
+  ostream os(&buffer);
+  astree::print(os, parser::root, 0);
+  buffer.close();
   /*  while (true){
     lexint = yylex();
     if (lexint == YYEOF)break;

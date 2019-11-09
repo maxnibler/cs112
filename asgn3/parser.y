@@ -33,19 +33,26 @@ using namespace std;
 start     : program              { $$ = parser::root;       }
           ;
 program   : program structdef    { $$ = $1->adopt ($2);     }
+          | program vardecl      { $$ = $1->adopt ($2);    }
           | program error '}'    { $$ = $1;                 }
           | program error ';'    { $$ = $1;                 }
           | program token
 	  |                      { $$ = parser::root;       }
 	  ;
-structdef : TOK_STRUCT TOK_IDENT  { $$ = $1->adopt ($2);    }
-          | '{' | type TOK_IDENT | '}' |
+structdef : TOK_STRUCT TOK_IDENT { $$ = $1->adopt ($2);  }
+          | '{'
+          | type TOK_IDENT
+	  | '}'
+	  | ';'
           ;
 type      : plaintype
+          | TOK_ARRAY '[' plaintype ']'
           ;
-plaintype : 
+plaintype : TOK_INT
+          | TOK_STRING
+          | TOK_PTR 
           ;
-token     : '(' | ')' | '[' | ']' | ';' | ','
+token     : '(' | ')' | '[' | ']' | ','
           | '=' | '+' | '-' | '*' | '/' | '%' | TOK_NOT | TOK_PTR
           | TOK_ROOT TOK_VOID | TOK_INT | TOK_STRING
           | TOK_IF | TOK_ELSE | TOK_WHILE | TOK_RETURN 
