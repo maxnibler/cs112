@@ -33,17 +33,13 @@ using namespace std;
 start     : program              { $$ = parser::root;       }
           ;
 program   : program structdef    { $$ = $1->adopt ($2);     }
-          | program vardecl      { $$ = $1->adopt ($2);    }
           | program error '}'    { $$ = $1;                 }
           | program error ';'    { $$ = $1;                 }
           | program token
 	  |                      { $$ = parser::root;       }
 	  ;
-structdef : TOK_STRUCT TOK_IDENT { $$ = $1->adopt ($2);  }
-          | '{'
-          | type TOK_IDENT
-	  | '}'
-	  | ';'
+structdef : TOK_STRUCT TOK_IDENT '{' type TOK_IDENT '}' ';'
+{ destroy($2); destroy($5, $6); $$ = $1->adopt ($3, $4); }
           ;
 type      : plaintype
           | TOK_ARRAY '[' plaintype ']'
