@@ -12,21 +12,24 @@ Terminals unused in grammar
 
 Rules useless in grammar
 
-   76 start: program
+   74 start: program
 
 
-State 5 conflicts: 2 reduce/reduce
-State 6 conflicts: 2 reduce/reduce
-State 13 conflicts: 1 shift/reduce
-State 16 conflicts: 2 reduce/reduce
+Rules useless in parser due to conflicts
+
+   35 returntype: plaintype
+
+
+State 5 conflicts: 1 reduce/reduce
+State 6 conflicts: 1 reduce/reduce
+State 16 conflicts: 1 reduce/reduce
 State 47 conflicts: 1 reduce/reduce
-State 55 conflicts: 1 shift/reduce
-State 95 conflicts: 2 shift/reduce
-State 96 conflicts: 2 shift/reduce
-State 97 conflicts: 2 shift/reduce
-State 98 conflicts: 2 shift/reduce
-State 99 conflicts: 2 shift/reduce
-State 100 conflicts: 7 shift/reduce
+State 89 conflicts: 2 shift/reduce
+State 90 conflicts: 2 shift/reduce
+State 91 conflicts: 2 shift/reduce
+State 92 conflicts: 2 shift/reduce
+State 93 conflicts: 2 shift/reduce
+State 94 conflicts: 7 shift/reduce
 
 
 Grammar
@@ -34,14 +37,14 @@ Grammar
     0 $accept: program $end
 
     1 program: program structdef
-    2        | program vardecl
-    3        | program function
+    2        | program function
+    3        | program vardecl
     4        | program error '}'
     5        | program error ';'
     6        | program token
     7        | %empty
 
-    8 vardecl: type TOK_IDENT
+    8 vardecl: type TOK_IDENT ';'
     9        | type TOK_IDENT '=' expr ';'
 
    10 expr: expr '+' expr
@@ -49,123 +52,122 @@ Grammar
    12     | expr '*' expr
    13     | expr '/' expr
    14     | expr '%' expr
-   15     | TOK_INTCON
-   16     | variable
+   15     | variable
+   16     | call
+   17     | constant
 
-   17 function: returntype TOK_IDENT '(' ')' block
-   18         | returntype TOK_IDENT '(' parameters ')' block
-   19         | returntype '(' ')' '{' vardecl
+   18 constant: TOK_INTCON
+   19         | TOK_STRINGCON
+   20         | TOK_CHARCON
 
-   20 parameters: type TOK_IDENT ',' type TOK_IDENT
-   21           | type TOK_IDENT
+   21 function: returntype TOK_IDENT '(' ')' block
 
-   22 block: '{' statement '}'
-   23      | '{' '}'
-   24      | ';'
+   22 call: TOK_IDENT '(' expr ')'
 
-   25 statement: vardecl
-   26          | block
-   27          | expr ';'
+   23 block: '{' statement '}'
 
-   28 variable: TOK_IDENT
-   29         | expr ',' expr
-   30         | expr TOK_ARROW TOK_IDENT
+   24 statement: vardecl
+   25          | block
+   26          | expr ';'
 
-   31 structdef: TOK_STRUCT TOK_IDENT '{' type TOK_IDENT '}' ';'
+   27 variable: TOK_IDENT
+   28         | expr ',' expr
+   29         | expr TOK_ARROW TOK_IDENT
 
-   32 type: plaintype
-   33     | TOK_ARRAY '[' plaintype ']'
+   30 structdef: TOK_STRUCT TOK_IDENT '{' type TOK_IDENT '}' ';'
 
-   34 plaintype: TOK_INT
-   35          | TOK_STRING
-   36          | TOK_PTR
+   31 type: plaintype
 
-   37 returntype: plaintype
-   38           | TOK_VOID
+   32 plaintype: TOK_INT
+   33          | TOK_STRING
+   34          | TOK_PTR
 
-   39 token: '('
-   40      | ')'
-   41      | '['
-   42      | ']'
-   43      | ','
-   44      | '}'
-   45      | '{'
-   46      | ';'
-   47      | '='
-   48      | '+'
-   49      | '-'
-   50      | '*'
-   51      | '/'
-   52      | '%'
-   53      | TOK_NOT
-   54      | TOK_PTR
-   55      | TOK_ROOT TOK_VOID
-   56      | TOK_INT
-   57      | TOK_STRING
-   58      | TOK_IF
-   59      | TOK_ELSE
-   60      | TOK_WHILE
-   61      | TOK_RETURN
-   62      | TOK_NULLPTR
-   63      | TOK_ARRAY
-   64      | TOK_ARROW
-   65      | TOK_ALLOC
-   66      | TOK_EQ
-   67      | TOK_NE
-   68      | TOK_LT
-   69      | TOK_LE
-   70      | TOK_GT
-   71      | TOK_GE
-   72      | TOK_IDENT
-   73      | TOK_INTCON
-   74      | TOK_CHARCON
-   75      | TOK_STRINGCON
+   35 returntype: plaintype
+   36           | TOK_VOID
+
+   37 token: '('
+   38      | ')'
+   39      | '['
+   40      | ']'
+   41      | ','
+   42      | '}'
+   43      | '{'
+   44      | ';'
+   45      | '='
+   46      | '+'
+   47      | '-'
+   48      | '*'
+   49      | '/'
+   50      | '%'
+   51      | TOK_NOT
+   52      | TOK_PTR
+   53      | TOK_ROOT TOK_VOID
+   54      | TOK_INT
+   55      | TOK_STRING
+   56      | TOK_IF
+   57      | TOK_ELSE
+   58      | TOK_WHILE
+   59      | TOK_RETURN
+   60      | TOK_NULLPTR
+   61      | TOK_ARRAY
+   62      | TOK_ARROW
+   63      | TOK_ALLOC
+   64      | TOK_EQ
+   65      | TOK_NE
+   66      | TOK_LT
+   67      | TOK_LE
+   68      | TOK_GT
+   69      | TOK_GE
+   70      | TOK_IDENT
+   71      | TOK_INTCON
+   72      | TOK_CHARCON
+   73      | TOK_STRINGCON
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
-    '%' (37) 14 52
-    '(' (40) 17 18 19 39
-    ')' (41) 17 18 19 40
-    '*' (42) 12 50
-    '+' (43) 10 48
-    ',' (44) 20 29 43
-    '-' (45) 11 49
-    '/' (47) 13 51
-    ';' (59) 5 9 24 27 31 46
-    '=' (61) 9 47
-    '[' (91) 33 41
-    ']' (93) 33 42
+    '%' (37) 14 50
+    '(' (40) 21 22 37
+    ')' (41) 21 22 38
+    '*' (42) 12 48
+    '+' (43) 10 46
+    ',' (44) 28 41
+    '-' (45) 11 47
+    '/' (47) 13 49
+    ';' (59) 5 8 9 26 30 44
+    '=' (61) 9 45
+    '[' (91) 39
+    ']' (93) 40
     '^' (94)
-    '{' (123) 19 22 23 31 45
-    '}' (125) 4 22 23 31 44
+    '{' (123) 23 30 43
+    '}' (125) 4 23 30 42
     error (256) 4 5
-    TOK_VOID (258) 38 55
-    TOK_INT (259) 34 56
-    TOK_STRING (260) 35 57
-    TOK_IF (261) 58
-    TOK_ELSE (262) 59
-    TOK_WHILE (263) 60
-    TOK_RETURN (264) 61
-    TOK_STRUCT (265) 31
-    TOK_NULLPTR (266) 62
-    TOK_ARRAY (267) 33 63
-    TOK_ARROW (268) 30 64
-    TOK_ALLOC (269) 65
-    TOK_PTR (270) 36 54
-    TOK_EQ (271) 66
-    TOK_NE (272) 67
-    TOK_LT (273) 68
-    TOK_LE (274) 69
-    TOK_GT (275) 70
-    TOK_GE (276) 71
-    TOK_NOT (277) 53
-    TOK_IDENT (278) 8 9 17 18 20 21 28 30 31 72
-    TOK_INTCON (279) 15 73
-    TOK_CHARCON (280) 74
-    TOK_STRINGCON (281) 75
-    TOK_ROOT (282) 55
+    TOK_VOID (258) 36 53
+    TOK_INT (259) 32 54
+    TOK_STRING (260) 33 55
+    TOK_IF (261) 56
+    TOK_ELSE (262) 57
+    TOK_WHILE (263) 58
+    TOK_RETURN (264) 59
+    TOK_STRUCT (265) 30
+    TOK_NULLPTR (266) 60
+    TOK_ARRAY (267) 61
+    TOK_ARROW (268) 29 62
+    TOK_ALLOC (269) 63
+    TOK_PTR (270) 34 52
+    TOK_EQ (271) 64
+    TOK_NE (272) 65
+    TOK_LT (273) 66
+    TOK_LE (274) 67
+    TOK_GT (275) 68
+    TOK_GE (276) 69
+    TOK_NOT (277) 51
+    TOK_IDENT (278) 8 9 21 22 27 29 30 70
+    TOK_INTCON (279) 18 71
+    TOK_CHARCON (280) 20 72
+    TOK_STRINGCON (281) 19 73
+    TOK_ROOT (282) 53
     TOK_BLOCK (283)
     TOK_CALL (284)
 
@@ -179,39 +181,42 @@ Nonterminals, with rules where they appear
         on right: 0 1 2 3 4 5 6
     vardecl (47)
         on left: 8 9
-        on right: 2 19 25
+        on right: 3 24
     expr (48)
-        on left: 10 11 12 13 14 15 16
-        on right: 9 10 11 12 13 14 27 29 30
-    function (49)
-        on left: 17 18 19
-        on right: 3
-    parameters (50)
-        on left: 20 21
-        on right: 18
-    block (51)
-        on left: 22 23 24
-        on right: 17 18 26
-    statement (52)
-        on left: 25 26 27
-        on right: 22
-    variable (53)
-        on left: 28 29 30
+        on left: 10 11 12 13 14 15 16 17
+        on right: 9 10 11 12 13 14 22 26 28 29
+    constant (49)
+        on left: 18 19 20
+        on right: 17
+    function (50)
+        on left: 21
+        on right: 2
+    call (51)
+        on left: 22
         on right: 16
-    structdef (54)
-        on left: 31
+    block (52)
+        on left: 23
+        on right: 21 25
+    statement (53)
+        on left: 24 25 26
+        on right: 23
+    variable (54)
+        on left: 27 28 29
+        on right: 15
+    structdef (55)
+        on left: 30
         on right: 1
-    type (55)
-        on left: 32 33
-        on right: 8 9 20 21 31
-    plaintype (56)
-        on left: 34 35 36
-        on right: 32 33 37
-    returntype (57)
-        on left: 37 38
-        on right: 17 18 19
-    token (58)
-        on left: 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75
+    type (56)
+        on left: 31
+        on right: 8 9 30
+    plaintype (57)
+        on left: 32 33 34
+        on right: 31 35
+    returntype (58)
+        on left: 35 36
+        on right: 21
+    token (59)
+        on left: 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73
         on right: 6
 
 
@@ -228,8 +233,8 @@ State 1
 
     0 $accept: program . $end
     1 program: program . structdef
-    2        | program . vardecl
-    3        | program . function
+    2        | program . function
+    3        | program . vardecl
     4        | program . error '}'
     5        | program . error ';'
     6        | program . token
@@ -303,308 +308,298 @@ State 3
 
 State 4
 
-   38 returntype: TOK_VOID .
+   36 returntype: TOK_VOID .
 
-    $default  reduce using rule 38 (returntype)
+    $default  reduce using rule 36 (returntype)
 
 
 State 5
 
-   34 plaintype: TOK_INT .
-   56 token: TOK_INT .
+   32 plaintype: TOK_INT .
+   54 token: TOK_INT .
 
-    TOK_IDENT  reduce using rule 34 (plaintype)
-    TOK_IDENT  [reduce using rule 56 (token)]
-    '('        reduce using rule 34 (plaintype)
-    '('        [reduce using rule 56 (token)]
-    $default   reduce using rule 56 (token)
+    TOK_IDENT  reduce using rule 32 (plaintype)
+    TOK_IDENT  [reduce using rule 54 (token)]
+    $default   reduce using rule 54 (token)
 
 
 State 6
 
-   35 plaintype: TOK_STRING .
-   57 token: TOK_STRING .
+   33 plaintype: TOK_STRING .
+   55 token: TOK_STRING .
 
-    TOK_IDENT  reduce using rule 35 (plaintype)
-    TOK_IDENT  [reduce using rule 57 (token)]
-    '('        reduce using rule 35 (plaintype)
-    '('        [reduce using rule 57 (token)]
-    $default   reduce using rule 57 (token)
+    TOK_IDENT  reduce using rule 33 (plaintype)
+    TOK_IDENT  [reduce using rule 55 (token)]
+    $default   reduce using rule 55 (token)
 
 
 State 7
 
-   58 token: TOK_IF .
+   56 token: TOK_IF .
 
-    $default  reduce using rule 58 (token)
+    $default  reduce using rule 56 (token)
 
 
 State 8
 
-   59 token: TOK_ELSE .
+   57 token: TOK_ELSE .
 
-    $default  reduce using rule 59 (token)
+    $default  reduce using rule 57 (token)
 
 
 State 9
 
-   60 token: TOK_WHILE .
+   58 token: TOK_WHILE .
 
-    $default  reduce using rule 60 (token)
+    $default  reduce using rule 58 (token)
 
 
 State 10
 
-   61 token: TOK_RETURN .
+   59 token: TOK_RETURN .
 
-    $default  reduce using rule 61 (token)
+    $default  reduce using rule 59 (token)
 
 
 State 11
 
-   31 structdef: TOK_STRUCT . TOK_IDENT '{' type TOK_IDENT '}' ';'
+   30 structdef: TOK_STRUCT . TOK_IDENT '{' type TOK_IDENT '}' ';'
 
     TOK_IDENT  shift, and go to state 52
 
 
 State 12
 
-   62 token: TOK_NULLPTR .
+   60 token: TOK_NULLPTR .
 
-    $default  reduce using rule 62 (token)
+    $default  reduce using rule 60 (token)
 
 
 State 13
 
-   33 type: TOK_ARRAY . '[' plaintype ']'
-   63 token: TOK_ARRAY .
+   61 token: TOK_ARRAY .
 
-    '['  shift, and go to state 53
-
-    '['       [reduce using rule 63 (token)]
-    $default  reduce using rule 63 (token)
+    $default  reduce using rule 61 (token)
 
 
 State 14
 
-   64 token: TOK_ARROW .
+   62 token: TOK_ARROW .
 
-    $default  reduce using rule 64 (token)
+    $default  reduce using rule 62 (token)
 
 
 State 15
 
-   65 token: TOK_ALLOC .
+   63 token: TOK_ALLOC .
 
-    $default  reduce using rule 65 (token)
+    $default  reduce using rule 63 (token)
 
 
 State 16
 
-   36 plaintype: TOK_PTR .
-   54 token: TOK_PTR .
+   34 plaintype: TOK_PTR .
+   52 token: TOK_PTR .
 
-    TOK_IDENT  reduce using rule 36 (plaintype)
-    TOK_IDENT  [reduce using rule 54 (token)]
-    '('        reduce using rule 36 (plaintype)
-    '('        [reduce using rule 54 (token)]
-    $default   reduce using rule 54 (token)
+    TOK_IDENT  reduce using rule 34 (plaintype)
+    TOK_IDENT  [reduce using rule 52 (token)]
+    $default   reduce using rule 52 (token)
 
 
 State 17
 
-   66 token: TOK_EQ .
+   64 token: TOK_EQ .
 
-    $default  reduce using rule 66 (token)
+    $default  reduce using rule 64 (token)
 
 
 State 18
 
-   67 token: TOK_NE .
+   65 token: TOK_NE .
 
-    $default  reduce using rule 67 (token)
+    $default  reduce using rule 65 (token)
 
 
 State 19
 
-   68 token: TOK_LT .
+   66 token: TOK_LT .
 
-    $default  reduce using rule 68 (token)
+    $default  reduce using rule 66 (token)
 
 
 State 20
 
-   69 token: TOK_LE .
+   67 token: TOK_LE .
 
-    $default  reduce using rule 69 (token)
+    $default  reduce using rule 67 (token)
 
 
 State 21
 
-   70 token: TOK_GT .
+   68 token: TOK_GT .
 
-    $default  reduce using rule 70 (token)
+    $default  reduce using rule 68 (token)
 
 
 State 22
 
-   71 token: TOK_GE .
+   69 token: TOK_GE .
 
-    $default  reduce using rule 71 (token)
+    $default  reduce using rule 69 (token)
 
 
 State 23
 
-   53 token: TOK_NOT .
-
-    $default  reduce using rule 53 (token)
-
-
-State 24
-
-   72 token: TOK_IDENT .
-
-    $default  reduce using rule 72 (token)
-
-
-State 25
-
-   73 token: TOK_INTCON .
-
-    $default  reduce using rule 73 (token)
-
-
-State 26
-
-   74 token: TOK_CHARCON .
-
-    $default  reduce using rule 74 (token)
-
-
-State 27
-
-   75 token: TOK_STRINGCON .
-
-    $default  reduce using rule 75 (token)
-
-
-State 28
-
-   55 token: TOK_ROOT . TOK_VOID
-
-    TOK_VOID  shift, and go to state 54
-
-
-State 29
-
-   47 token: '=' .
-
-    $default  reduce using rule 47 (token)
-
-
-State 30
-
-   48 token: '+' .
-
-    $default  reduce using rule 48 (token)
-
-
-State 31
-
-   49 token: '-' .
-
-    $default  reduce using rule 49 (token)
-
-
-State 32
-
-   50 token: '*' .
-
-    $default  reduce using rule 50 (token)
-
-
-State 33
-
-   51 token: '/' .
+   51 token: TOK_NOT .
 
     $default  reduce using rule 51 (token)
 
 
-State 34
+State 24
 
-   52 token: '%' .
+   70 token: TOK_IDENT .
 
-    $default  reduce using rule 52 (token)
-
-
-State 35
-
-   44 token: '}' .
-
-    $default  reduce using rule 44 (token)
+    $default  reduce using rule 70 (token)
 
 
-State 36
+State 25
 
-   46 token: ';' .
+   71 token: TOK_INTCON .
 
-    $default  reduce using rule 46 (token)
-
-
-State 37
-
-   39 token: '(' .
-
-    $default  reduce using rule 39 (token)
+    $default  reduce using rule 71 (token)
 
 
-State 38
+State 26
 
-   40 token: ')' .
+   72 token: TOK_CHARCON .
 
-    $default  reduce using rule 40 (token)
+    $default  reduce using rule 72 (token)
 
 
-State 39
+State 27
 
-   45 token: '{' .
+   73 token: TOK_STRINGCON .
+
+    $default  reduce using rule 73 (token)
+
+
+State 28
+
+   53 token: TOK_ROOT . TOK_VOID
+
+    TOK_VOID  shift, and go to state 53
+
+
+State 29
+
+   45 token: '=' .
 
     $default  reduce using rule 45 (token)
 
 
-State 40
+State 30
 
-   43 token: ',' .
+   46 token: '+' .
 
-    $default  reduce using rule 43 (token)
-
-
-State 41
-
-   41 token: '[' .
-
-    $default  reduce using rule 41 (token)
+    $default  reduce using rule 46 (token)
 
 
-State 42
+State 31
 
-   42 token: ']' .
+   47 token: '-' .
+
+    $default  reduce using rule 47 (token)
+
+
+State 32
+
+   48 token: '*' .
+
+    $default  reduce using rule 48 (token)
+
+
+State 33
+
+   49 token: '/' .
+
+    $default  reduce using rule 49 (token)
+
+
+State 34
+
+   50 token: '%' .
+
+    $default  reduce using rule 50 (token)
+
+
+State 35
+
+   42 token: '}' .
 
     $default  reduce using rule 42 (token)
 
 
+State 36
+
+   44 token: ';' .
+
+    $default  reduce using rule 44 (token)
+
+
+State 37
+
+   37 token: '(' .
+
+    $default  reduce using rule 37 (token)
+
+
+State 38
+
+   38 token: ')' .
+
+    $default  reduce using rule 38 (token)
+
+
+State 39
+
+   43 token: '{' .
+
+    $default  reduce using rule 43 (token)
+
+
+State 40
+
+   41 token: ',' .
+
+    $default  reduce using rule 41 (token)
+
+
+State 41
+
+   39 token: '[' .
+
+    $default  reduce using rule 39 (token)
+
+
+State 42
+
+   40 token: ']' .
+
+    $default  reduce using rule 40 (token)
+
+
 State 43
 
-    2 program: program vardecl .
+    3 program: program vardecl .
 
-    $default  reduce using rule 2 (program)
+    $default  reduce using rule 3 (program)
 
 
 State 44
 
-    3 program: program function .
+    2 program: program function .
 
-    $default  reduce using rule 3 (program)
+    $default  reduce using rule 2 (program)
 
 
 State 45
@@ -616,31 +611,27 @@ State 45
 
 State 46
 
-    8 vardecl: type . TOK_IDENT
+    8 vardecl: type . TOK_IDENT ';'
     9        | type . TOK_IDENT '=' expr ';'
 
-    TOK_IDENT  shift, and go to state 55
+    TOK_IDENT  shift, and go to state 54
 
 
 State 47
 
-   32 type: plaintype .
-   37 returntype: plaintype .
+   31 type: plaintype .
+   35 returntype: plaintype .
 
-    TOK_IDENT  reduce using rule 32 (type)
-    TOK_IDENT  [reduce using rule 37 (returntype)]
-    '('        reduce using rule 37 (returntype)
-    $default   reduce using rule 32 (type)
+    TOK_IDENT  reduce using rule 31 (type)
+    TOK_IDENT  [reduce using rule 35 (returntype)]
+    $default   reduce using rule 31 (type)
 
 
 State 48
 
-   17 function: returntype . TOK_IDENT '(' ')' block
-   18         | returntype . TOK_IDENT '(' parameters ')' block
-   19         | returntype . '(' ')' '{' vardecl
+   21 function: returntype . TOK_IDENT '(' ')' block
 
-    TOK_IDENT  shift, and go to state 56
-    '('        shift, and go to state 57
+    TOK_IDENT  shift, and go to state 55
 
 
 State 49
@@ -666,173 +657,142 @@ State 51
 
 State 52
 
-   31 structdef: TOK_STRUCT TOK_IDENT . '{' type TOK_IDENT '}' ';'
+   30 structdef: TOK_STRUCT TOK_IDENT . '{' type TOK_IDENT '}' ';'
 
-    '{'  shift, and go to state 58
+    '{'  shift, and go to state 56
 
 
 State 53
 
-   33 type: TOK_ARRAY '[' . plaintype ']'
+   53 token: TOK_ROOT TOK_VOID .
 
-    TOK_INT     shift, and go to state 59
-    TOK_STRING  shift, and go to state 60
-    TOK_PTR     shift, and go to state 61
-
-    plaintype  go to state 62
+    $default  reduce using rule 53 (token)
 
 
 State 54
 
-   55 token: TOK_ROOT TOK_VOID .
+    8 vardecl: type TOK_IDENT . ';'
+    9        | type TOK_IDENT . '=' expr ';'
 
-    $default  reduce using rule 55 (token)
+    '='  shift, and go to state 57
+    ';'  shift, and go to state 58
 
 
 State 55
 
-    8 vardecl: type TOK_IDENT .
-    9        | type TOK_IDENT . '=' expr ';'
+   21 function: returntype TOK_IDENT . '(' ')' block
 
-    '='  shift, and go to state 63
-
-    '='       [reduce using rule 8 (vardecl)]
-    $default  reduce using rule 8 (vardecl)
+    '('  shift, and go to state 59
 
 
 State 56
 
-   17 function: returntype TOK_IDENT . '(' ')' block
-   18         | returntype TOK_IDENT . '(' parameters ')' block
+   30 structdef: TOK_STRUCT TOK_IDENT '{' . type TOK_IDENT '}' ';'
 
-    '('  shift, and go to state 64
+    TOK_INT     shift, and go to state 60
+    TOK_STRING  shift, and go to state 61
+    TOK_PTR     shift, and go to state 62
+
+    type       go to state 63
+    plaintype  go to state 64
 
 
 State 57
 
-   19 function: returntype '(' . ')' '{' vardecl
+    9 vardecl: type TOK_IDENT '=' . expr ';'
 
-    ')'  shift, and go to state 65
+    TOK_IDENT      shift, and go to state 65
+    TOK_INTCON     shift, and go to state 66
+    TOK_CHARCON    shift, and go to state 67
+    TOK_STRINGCON  shift, and go to state 68
+
+    expr      go to state 69
+    constant  go to state 70
+    call      go to state 71
+    variable  go to state 72
 
 
 State 58
 
-   31 structdef: TOK_STRUCT TOK_IDENT '{' . type TOK_IDENT '}' ';'
+    8 vardecl: type TOK_IDENT ';' .
 
-    TOK_INT     shift, and go to state 59
-    TOK_STRING  shift, and go to state 60
-    TOK_ARRAY   shift, and go to state 66
-    TOK_PTR     shift, and go to state 61
-
-    type       go to state 67
-    plaintype  go to state 68
+    $default  reduce using rule 8 (vardecl)
 
 
 State 59
 
-   34 plaintype: TOK_INT .
+   21 function: returntype TOK_IDENT '(' . ')' block
 
-    $default  reduce using rule 34 (plaintype)
+    ')'  shift, and go to state 73
 
 
 State 60
 
-   35 plaintype: TOK_STRING .
+   32 plaintype: TOK_INT .
 
-    $default  reduce using rule 35 (plaintype)
+    $default  reduce using rule 32 (plaintype)
 
 
 State 61
 
-   36 plaintype: TOK_PTR .
+   33 plaintype: TOK_STRING .
 
-    $default  reduce using rule 36 (plaintype)
+    $default  reduce using rule 33 (plaintype)
 
 
 State 62
 
-   33 type: TOK_ARRAY '[' plaintype . ']'
+   34 plaintype: TOK_PTR .
 
-    ']'  shift, and go to state 69
+    $default  reduce using rule 34 (plaintype)
 
 
 State 63
 
-    9 vardecl: type TOK_IDENT '=' . expr ';'
+   30 structdef: TOK_STRUCT TOK_IDENT '{' type . TOK_IDENT '}' ';'
 
-    TOK_IDENT   shift, and go to state 70
-    TOK_INTCON  shift, and go to state 71
-
-    expr      go to state 72
-    variable  go to state 73
+    TOK_IDENT  shift, and go to state 74
 
 
 State 64
 
-   17 function: returntype TOK_IDENT '(' . ')' block
-   18         | returntype TOK_IDENT '(' . parameters ')' block
+   31 type: plaintype .
 
-    TOK_INT     shift, and go to state 59
-    TOK_STRING  shift, and go to state 60
-    TOK_ARRAY   shift, and go to state 66
-    TOK_PTR     shift, and go to state 61
-    ')'         shift, and go to state 74
-
-    parameters  go to state 75
-    type        go to state 76
-    plaintype   go to state 68
+    $default  reduce using rule 31 (type)
 
 
 State 65
 
-   19 function: returntype '(' ')' . '{' vardecl
+   22 call: TOK_IDENT . '(' expr ')'
+   27 variable: TOK_IDENT .
 
-    '{'  shift, and go to state 77
+    '('  shift, and go to state 75
+
+    $default  reduce using rule 27 (variable)
 
 
 State 66
 
-   33 type: TOK_ARRAY . '[' plaintype ']'
+   18 constant: TOK_INTCON .
 
-    '['  shift, and go to state 53
+    $default  reduce using rule 18 (constant)
 
 
 State 67
 
-   31 structdef: TOK_STRUCT TOK_IDENT '{' type . TOK_IDENT '}' ';'
+   20 constant: TOK_CHARCON .
 
-    TOK_IDENT  shift, and go to state 78
+    $default  reduce using rule 20 (constant)
 
 
 State 68
 
-   32 type: plaintype .
+   19 constant: TOK_STRINGCON .
 
-    $default  reduce using rule 32 (type)
+    $default  reduce using rule 19 (constant)
 
 
 State 69
-
-   33 type: TOK_ARRAY '[' plaintype ']' .
-
-    $default  reduce using rule 33 (type)
-
-
-State 70
-
-   28 variable: TOK_IDENT .
-
-    $default  reduce using rule 28 (variable)
-
-
-State 71
-
-   15 expr: TOK_INTCON .
-
-    $default  reduce using rule 15 (expr)
-
-
-State 72
 
     9 vardecl: type TOK_IDENT '=' expr . ';'
    10 expr: expr . '+' expr
@@ -840,232 +800,242 @@ State 72
    12     | expr . '*' expr
    13     | expr . '/' expr
    14     | expr . '%' expr
-   29 variable: expr . ',' expr
-   30         | expr . TOK_ARROW TOK_IDENT
+   28 variable: expr . ',' expr
+   29         | expr . TOK_ARROW TOK_IDENT
 
-    TOK_ARROW  shift, and go to state 79
-    '+'        shift, and go to state 80
-    '-'        shift, and go to state 81
-    '*'        shift, and go to state 82
-    '/'        shift, and go to state 83
-    '%'        shift, and go to state 84
-    ';'        shift, and go to state 85
-    ','        shift, and go to state 86
+    TOK_ARROW  shift, and go to state 76
+    '+'        shift, and go to state 77
+    '-'        shift, and go to state 78
+    '*'        shift, and go to state 79
+    '/'        shift, and go to state 80
+    '%'        shift, and go to state 81
+    ';'        shift, and go to state 82
+    ','        shift, and go to state 83
 
 
-State 73
+State 70
 
-   16 expr: variable .
+   17 expr: constant .
+
+    $default  reduce using rule 17 (expr)
+
+
+State 71
+
+   16 expr: call .
 
     $default  reduce using rule 16 (expr)
 
 
+State 72
+
+   15 expr: variable .
+
+    $default  reduce using rule 15 (expr)
+
+
+State 73
+
+   21 function: returntype TOK_IDENT '(' ')' . block
+
+    '{'  shift, and go to state 84
+
+    block  go to state 85
+
+
 State 74
 
-   17 function: returntype TOK_IDENT '(' ')' . block
+   30 structdef: TOK_STRUCT TOK_IDENT '{' type TOK_IDENT . '}' ';'
 
-    ';'  shift, and go to state 87
-    '{'  shift, and go to state 88
-
-    block  go to state 89
+    '}'  shift, and go to state 86
 
 
 State 75
 
-   18 function: returntype TOK_IDENT '(' parameters . ')' block
+   22 call: TOK_IDENT '(' . expr ')'
 
-    ')'  shift, and go to state 90
+    TOK_IDENT      shift, and go to state 65
+    TOK_INTCON     shift, and go to state 66
+    TOK_CHARCON    shift, and go to state 67
+    TOK_STRINGCON  shift, and go to state 68
+
+    expr      go to state 87
+    constant  go to state 70
+    call      go to state 71
+    variable  go to state 72
 
 
 State 76
 
-   20 parameters: type . TOK_IDENT ',' type TOK_IDENT
-   21           | type . TOK_IDENT
+   29 variable: expr TOK_ARROW . TOK_IDENT
 
-    TOK_IDENT  shift, and go to state 91
+    TOK_IDENT  shift, and go to state 88
 
 
 State 77
 
-   19 function: returntype '(' ')' '{' . vardecl
+   10 expr: expr '+' . expr
 
-    TOK_INT     shift, and go to state 59
-    TOK_STRING  shift, and go to state 60
-    TOK_ARRAY   shift, and go to state 66
-    TOK_PTR     shift, and go to state 61
+    TOK_IDENT      shift, and go to state 65
+    TOK_INTCON     shift, and go to state 66
+    TOK_CHARCON    shift, and go to state 67
+    TOK_STRINGCON  shift, and go to state 68
 
-    vardecl    go to state 92
-    type       go to state 46
-    plaintype  go to state 68
+    expr      go to state 89
+    constant  go to state 70
+    call      go to state 71
+    variable  go to state 72
 
 
 State 78
 
-   31 structdef: TOK_STRUCT TOK_IDENT '{' type TOK_IDENT . '}' ';'
+   11 expr: expr '-' . expr
 
-    '}'  shift, and go to state 93
+    TOK_IDENT      shift, and go to state 65
+    TOK_INTCON     shift, and go to state 66
+    TOK_CHARCON    shift, and go to state 67
+    TOK_STRINGCON  shift, and go to state 68
+
+    expr      go to state 90
+    constant  go to state 70
+    call      go to state 71
+    variable  go to state 72
 
 
 State 79
 
-   30 variable: expr TOK_ARROW . TOK_IDENT
+   12 expr: expr '*' . expr
 
-    TOK_IDENT  shift, and go to state 94
+    TOK_IDENT      shift, and go to state 65
+    TOK_INTCON     shift, and go to state 66
+    TOK_CHARCON    shift, and go to state 67
+    TOK_STRINGCON  shift, and go to state 68
+
+    expr      go to state 91
+    constant  go to state 70
+    call      go to state 71
+    variable  go to state 72
 
 
 State 80
 
-   10 expr: expr '+' . expr
+   13 expr: expr '/' . expr
 
-    TOK_IDENT   shift, and go to state 70
-    TOK_INTCON  shift, and go to state 71
+    TOK_IDENT      shift, and go to state 65
+    TOK_INTCON     shift, and go to state 66
+    TOK_CHARCON    shift, and go to state 67
+    TOK_STRINGCON  shift, and go to state 68
 
-    expr      go to state 95
-    variable  go to state 73
+    expr      go to state 92
+    constant  go to state 70
+    call      go to state 71
+    variable  go to state 72
 
 
 State 81
 
-   11 expr: expr '-' . expr
+   14 expr: expr '%' . expr
 
-    TOK_IDENT   shift, and go to state 70
-    TOK_INTCON  shift, and go to state 71
+    TOK_IDENT      shift, and go to state 65
+    TOK_INTCON     shift, and go to state 66
+    TOK_CHARCON    shift, and go to state 67
+    TOK_STRINGCON  shift, and go to state 68
 
-    expr      go to state 96
-    variable  go to state 73
+    expr      go to state 93
+    constant  go to state 70
+    call      go to state 71
+    variable  go to state 72
 
 
 State 82
-
-   12 expr: expr '*' . expr
-
-    TOK_IDENT   shift, and go to state 70
-    TOK_INTCON  shift, and go to state 71
-
-    expr      go to state 97
-    variable  go to state 73
-
-
-State 83
-
-   13 expr: expr '/' . expr
-
-    TOK_IDENT   shift, and go to state 70
-    TOK_INTCON  shift, and go to state 71
-
-    expr      go to state 98
-    variable  go to state 73
-
-
-State 84
-
-   14 expr: expr '%' . expr
-
-    TOK_IDENT   shift, and go to state 70
-    TOK_INTCON  shift, and go to state 71
-
-    expr      go to state 99
-    variable  go to state 73
-
-
-State 85
 
     9 vardecl: type TOK_IDENT '=' expr ';' .
 
     $default  reduce using rule 9 (vardecl)
 
 
+State 83
+
+   28 variable: expr ',' . expr
+
+    TOK_IDENT      shift, and go to state 65
+    TOK_INTCON     shift, and go to state 66
+    TOK_CHARCON    shift, and go to state 67
+    TOK_STRINGCON  shift, and go to state 68
+
+    expr      go to state 94
+    constant  go to state 70
+    call      go to state 71
+    variable  go to state 72
+
+
+State 84
+
+   23 block: '{' . statement '}'
+
+    TOK_INT        shift, and go to state 60
+    TOK_STRING     shift, and go to state 61
+    TOK_PTR        shift, and go to state 62
+    TOK_IDENT      shift, and go to state 65
+    TOK_INTCON     shift, and go to state 66
+    TOK_CHARCON    shift, and go to state 67
+    TOK_STRINGCON  shift, and go to state 68
+    '{'            shift, and go to state 84
+
+    vardecl    go to state 95
+    expr       go to state 96
+    constant   go to state 70
+    call       go to state 71
+    block      go to state 97
+    statement  go to state 98
+    variable   go to state 72
+    type       go to state 46
+    plaintype  go to state 64
+
+
+State 85
+
+   21 function: returntype TOK_IDENT '(' ')' block .
+
+    $default  reduce using rule 21 (function)
+
+
 State 86
 
-   29 variable: expr ',' . expr
+   30 structdef: TOK_STRUCT TOK_IDENT '{' type TOK_IDENT '}' . ';'
 
-    TOK_IDENT   shift, and go to state 70
-    TOK_INTCON  shift, and go to state 71
-
-    expr      go to state 100
-    variable  go to state 73
+    ';'  shift, and go to state 99
 
 
 State 87
 
-   24 block: ';' .
+   10 expr: expr . '+' expr
+   11     | expr . '-' expr
+   12     | expr . '*' expr
+   13     | expr . '/' expr
+   14     | expr . '%' expr
+   22 call: TOK_IDENT '(' expr . ')'
+   28 variable: expr . ',' expr
+   29         | expr . TOK_ARROW TOK_IDENT
 
-    $default  reduce using rule 24 (block)
+    TOK_ARROW  shift, and go to state 76
+    '+'        shift, and go to state 77
+    '-'        shift, and go to state 78
+    '*'        shift, and go to state 79
+    '/'        shift, and go to state 80
+    '%'        shift, and go to state 81
+    ')'        shift, and go to state 100
+    ','        shift, and go to state 83
 
 
 State 88
 
-   22 block: '{' . statement '}'
-   23      | '{' . '}'
+   29 variable: expr TOK_ARROW TOK_IDENT .
 
-    TOK_INT     shift, and go to state 59
-    TOK_STRING  shift, and go to state 60
-    TOK_ARRAY   shift, and go to state 66
-    TOK_PTR     shift, and go to state 61
-    TOK_IDENT   shift, and go to state 70
-    TOK_INTCON  shift, and go to state 71
-    '}'         shift, and go to state 101
-    ';'         shift, and go to state 87
-    '{'         shift, and go to state 88
-
-    vardecl    go to state 102
-    expr       go to state 103
-    block      go to state 104
-    statement  go to state 105
-    variable   go to state 73
-    type       go to state 46
-    plaintype  go to state 68
+    $default  reduce using rule 29 (variable)
 
 
 State 89
-
-   17 function: returntype TOK_IDENT '(' ')' block .
-
-    $default  reduce using rule 17 (function)
-
-
-State 90
-
-   18 function: returntype TOK_IDENT '(' parameters ')' . block
-
-    ';'  shift, and go to state 87
-    '{'  shift, and go to state 88
-
-    block  go to state 106
-
-
-State 91
-
-   20 parameters: type TOK_IDENT . ',' type TOK_IDENT
-   21           | type TOK_IDENT .
-
-    ','  shift, and go to state 107
-
-    $default  reduce using rule 21 (parameters)
-
-
-State 92
-
-   19 function: returntype '(' ')' '{' vardecl .
-
-    $default  reduce using rule 19 (function)
-
-
-State 93
-
-   31 structdef: TOK_STRUCT TOK_IDENT '{' type TOK_IDENT '}' . ';'
-
-    ';'  shift, and go to state 108
-
-
-State 94
-
-   30 variable: expr TOK_ARROW TOK_IDENT .
-
-    $default  reduce using rule 30 (variable)
-
-
-State 95
 
    10 expr: expr . '+' expr
    10     | expr '+' expr .
@@ -1073,21 +1043,21 @@ State 95
    12     | expr . '*' expr
    13     | expr . '/' expr
    14     | expr . '%' expr
-   29 variable: expr . ',' expr
-   30         | expr . TOK_ARROW TOK_IDENT
+   28 variable: expr . ',' expr
+   29         | expr . TOK_ARROW TOK_IDENT
 
-    TOK_ARROW  shift, and go to state 79
-    '*'        shift, and go to state 82
-    '/'        shift, and go to state 83
-    '%'        shift, and go to state 84
-    ','        shift, and go to state 86
+    TOK_ARROW  shift, and go to state 76
+    '*'        shift, and go to state 79
+    '/'        shift, and go to state 80
+    '%'        shift, and go to state 81
+    ','        shift, and go to state 83
 
     TOK_ARROW  [reduce using rule 10 (expr)]
     ','        [reduce using rule 10 (expr)]
     $default   reduce using rule 10 (expr)
 
 
-State 96
+State 90
 
    10 expr: expr . '+' expr
    11     | expr . '-' expr
@@ -1095,21 +1065,21 @@ State 96
    12     | expr . '*' expr
    13     | expr . '/' expr
    14     | expr . '%' expr
-   29 variable: expr . ',' expr
-   30         | expr . TOK_ARROW TOK_IDENT
+   28 variable: expr . ',' expr
+   29         | expr . TOK_ARROW TOK_IDENT
 
-    TOK_ARROW  shift, and go to state 79
-    '*'        shift, and go to state 82
-    '/'        shift, and go to state 83
-    '%'        shift, and go to state 84
-    ','        shift, and go to state 86
+    TOK_ARROW  shift, and go to state 76
+    '*'        shift, and go to state 79
+    '/'        shift, and go to state 80
+    '%'        shift, and go to state 81
+    ','        shift, and go to state 83
 
     TOK_ARROW  [reduce using rule 11 (expr)]
     ','        [reduce using rule 11 (expr)]
     $default   reduce using rule 11 (expr)
 
 
-State 97
+State 91
 
    10 expr: expr . '+' expr
    11     | expr . '-' expr
@@ -1117,18 +1087,18 @@ State 97
    12     | expr '*' expr .
    13     | expr . '/' expr
    14     | expr . '%' expr
-   29 variable: expr . ',' expr
-   30         | expr . TOK_ARROW TOK_IDENT
+   28 variable: expr . ',' expr
+   29         | expr . TOK_ARROW TOK_IDENT
 
-    TOK_ARROW  shift, and go to state 79
-    ','        shift, and go to state 86
+    TOK_ARROW  shift, and go to state 76
+    ','        shift, and go to state 83
 
     TOK_ARROW  [reduce using rule 12 (expr)]
     ','        [reduce using rule 12 (expr)]
     $default   reduce using rule 12 (expr)
 
 
-State 98
+State 92
 
    10 expr: expr . '+' expr
    11     | expr . '-' expr
@@ -1136,18 +1106,18 @@ State 98
    13     | expr . '/' expr
    13     | expr '/' expr .
    14     | expr . '%' expr
-   29 variable: expr . ',' expr
-   30         | expr . TOK_ARROW TOK_IDENT
+   28 variable: expr . ',' expr
+   29         | expr . TOK_ARROW TOK_IDENT
 
-    TOK_ARROW  shift, and go to state 79
-    ','        shift, and go to state 86
+    TOK_ARROW  shift, and go to state 76
+    ','        shift, and go to state 83
 
     TOK_ARROW  [reduce using rule 13 (expr)]
     ','        [reduce using rule 13 (expr)]
     $default   reduce using rule 13 (expr)
 
 
-State 99
+State 93
 
    10 expr: expr . '+' expr
    11     | expr . '-' expr
@@ -1155,145 +1125,111 @@ State 99
    13     | expr . '/' expr
    14     | expr . '%' expr
    14     | expr '%' expr .
-   29 variable: expr . ',' expr
-   30         | expr . TOK_ARROW TOK_IDENT
+   28 variable: expr . ',' expr
+   29         | expr . TOK_ARROW TOK_IDENT
 
-    TOK_ARROW  shift, and go to state 79
-    ','        shift, and go to state 86
+    TOK_ARROW  shift, and go to state 76
+    ','        shift, and go to state 83
 
     TOK_ARROW  [reduce using rule 14 (expr)]
     ','        [reduce using rule 14 (expr)]
     $default   reduce using rule 14 (expr)
 
 
-State 100
+State 94
 
    10 expr: expr . '+' expr
    11     | expr . '-' expr
    12     | expr . '*' expr
    13     | expr . '/' expr
    14     | expr . '%' expr
-   29 variable: expr . ',' expr
-   29         | expr ',' expr .
-   30         | expr . TOK_ARROW TOK_IDENT
+   28 variable: expr . ',' expr
+   28         | expr ',' expr .
+   29         | expr . TOK_ARROW TOK_IDENT
 
-    TOK_ARROW  shift, and go to state 79
-    '+'        shift, and go to state 80
-    '-'        shift, and go to state 81
-    '*'        shift, and go to state 82
-    '/'        shift, and go to state 83
-    '%'        shift, and go to state 84
-    ','        shift, and go to state 86
+    TOK_ARROW  shift, and go to state 76
+    '+'        shift, and go to state 77
+    '-'        shift, and go to state 78
+    '*'        shift, and go to state 79
+    '/'        shift, and go to state 80
+    '%'        shift, and go to state 81
+    ','        shift, and go to state 83
 
-    TOK_ARROW  [reduce using rule 29 (variable)]
-    '+'        [reduce using rule 29 (variable)]
-    '-'        [reduce using rule 29 (variable)]
-    '*'        [reduce using rule 29 (variable)]
-    '/'        [reduce using rule 29 (variable)]
-    '%'        [reduce using rule 29 (variable)]
-    ','        [reduce using rule 29 (variable)]
-    $default   reduce using rule 29 (variable)
-
-
-State 101
-
-   23 block: '{' '}' .
-
-    $default  reduce using rule 23 (block)
+    TOK_ARROW  [reduce using rule 28 (variable)]
+    '+'        [reduce using rule 28 (variable)]
+    '-'        [reduce using rule 28 (variable)]
+    '*'        [reduce using rule 28 (variable)]
+    '/'        [reduce using rule 28 (variable)]
+    '%'        [reduce using rule 28 (variable)]
+    ','        [reduce using rule 28 (variable)]
+    $default   reduce using rule 28 (variable)
 
 
-State 102
+State 95
 
-   25 statement: vardecl .
+   24 statement: vardecl .
+
+    $default  reduce using rule 24 (statement)
+
+
+State 96
+
+   10 expr: expr . '+' expr
+   11     | expr . '-' expr
+   12     | expr . '*' expr
+   13     | expr . '/' expr
+   14     | expr . '%' expr
+   26 statement: expr . ';'
+   28 variable: expr . ',' expr
+   29         | expr . TOK_ARROW TOK_IDENT
+
+    TOK_ARROW  shift, and go to state 76
+    '+'        shift, and go to state 77
+    '-'        shift, and go to state 78
+    '*'        shift, and go to state 79
+    '/'        shift, and go to state 80
+    '%'        shift, and go to state 81
+    ';'        shift, and go to state 101
+    ','        shift, and go to state 83
+
+
+State 97
+
+   25 statement: block .
 
     $default  reduce using rule 25 (statement)
 
 
-State 103
+State 98
 
-   10 expr: expr . '+' expr
-   11     | expr . '-' expr
-   12     | expr . '*' expr
-   13     | expr . '/' expr
-   14     | expr . '%' expr
-   27 statement: expr . ';'
-   29 variable: expr . ',' expr
-   30         | expr . TOK_ARROW TOK_IDENT
+   23 block: '{' statement . '}'
 
-    TOK_ARROW  shift, and go to state 79
-    '+'        shift, and go to state 80
-    '-'        shift, and go to state 81
-    '*'        shift, and go to state 82
-    '/'        shift, and go to state 83
-    '%'        shift, and go to state 84
-    ';'        shift, and go to state 109
-    ','        shift, and go to state 86
+    '}'  shift, and go to state 102
 
 
-State 104
+State 99
 
-   26 statement: block .
+   30 structdef: TOK_STRUCT TOK_IDENT '{' type TOK_IDENT '}' ';' .
+
+    $default  reduce using rule 30 (structdef)
+
+
+State 100
+
+   22 call: TOK_IDENT '(' expr ')' .
+
+    $default  reduce using rule 22 (call)
+
+
+State 101
+
+   26 statement: expr ';' .
 
     $default  reduce using rule 26 (statement)
 
 
-State 105
+State 102
 
-   22 block: '{' statement . '}'
+   23 block: '{' statement '}' .
 
-    '}'  shift, and go to state 110
-
-
-State 106
-
-   18 function: returntype TOK_IDENT '(' parameters ')' block .
-
-    $default  reduce using rule 18 (function)
-
-
-State 107
-
-   20 parameters: type TOK_IDENT ',' . type TOK_IDENT
-
-    TOK_INT     shift, and go to state 59
-    TOK_STRING  shift, and go to state 60
-    TOK_ARRAY   shift, and go to state 66
-    TOK_PTR     shift, and go to state 61
-
-    type       go to state 111
-    plaintype  go to state 68
-
-
-State 108
-
-   31 structdef: TOK_STRUCT TOK_IDENT '{' type TOK_IDENT '}' ';' .
-
-    $default  reduce using rule 31 (structdef)
-
-
-State 109
-
-   27 statement: expr ';' .
-
-    $default  reduce using rule 27 (statement)
-
-
-State 110
-
-   22 block: '{' statement '}' .
-
-    $default  reduce using rule 22 (block)
-
-
-State 111
-
-   20 parameters: type TOK_IDENT ',' type . TOK_IDENT
-
-    TOK_IDENT  shift, and go to state 112
-
-
-State 112
-
-   20 parameters: type TOK_IDENT ',' type TOK_IDENT .
-
-    $default  reduce using rule 20 (parameters)
+    $default  reduce using rule 23 (block)

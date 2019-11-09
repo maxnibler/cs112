@@ -37,18 +37,18 @@ using namespace std;
 
 %%
 
-start     : program              { $$ = parser::root;       }
+start     : program              { $$ = $1 = nullptr;       }
           ;
 program   : program structdef    { $$ = $1->adopt ($2);     }
+          | program function     { cout << "Function" << endl;
+                                   $$ = $1->adopt ($2);     }
           | program vardecl      { $$ = $1->adopt ($2);     }
-| program function     { cout << "Function" << endl;
-   $$ = $1->adopt ($2);     }
           | program error '}'    { $$ = $1;                 }
           | program error ';'    { $$ = $1;                 }
           | program token        { $$ = $1->adopt ($2);     }
-	  |                      { $$ = parser::root;       }
+	  | %empty               { $$ = parser::root;       }
 	  ;
-vardecl   : type TOK_IDENT
+vardecl   : type TOK_IDENT ';'   { destroy($3); $$ = $1;}
           | type TOK_IDENT '=' expr ';'
            { destroy($3, $5); $$ = $1->adopt ($2); $$ = $1->adopt($4);}
           ;
@@ -57,22 +57,20 @@ expr      : expr '+' expr { $$ = $2->adopt($1, $3);}
           | expr '*' expr { $$ = $2->adopt($1, $3);}
           | expr '/' expr { $$ = $2->adopt($1, $3);}
           | expr '%' expr { $$ = $2->adopt($1, $3);}
-          | TOK_INTCON
           | variable
+	  | call
+	  | constant
+          ;
+constant  : TOK_INTCON
+          | TOK_STRINGCON
+          | TOK_CHARCON
           ;
 function  : returntype TOK_IDENT '(' ')' block
-{ $$ = $1->adopt($2); destroy($3, $4); $$ = $1->adopt($5); }
-          | returntype TOK_IDENT '(' parameters ')' block
-	   { destroy($5); $$ = $2->adopt($4, $6); }
-| returntype '(' ')' '{' vardecl {$$ = $1->adopt($5);}
+           { $$ = $1->adopt($2, $5); destroy($3, $4); }
           ;
-parameters: type TOK_IDENT ',' type TOK_IDENT
-           { destroy($3); $$ = $1->adopt($4, $5); }
-| type TOK_IDENT    { $$ = $1; }
+call      : TOK_IDENT '(' expr ')' { $$ = $1->adopt($3); }
           ;
-block     : '{' statement '}' { destroy($1, $3); $$ = $2;}
-| '{' '}' {destroy($1, $2); }
-          | ';'               { destroy($1); }
+block     : '{' statement '}' { $$ = $1->adopt($2); destroy($3);}
           ;
 statement : vardecl  
           | block    
@@ -83,16 +81,15 @@ variable  : TOK_IDENT
           | expr TOK_ARROW TOK_IDENT { $$ = $1->adopt($3); destroy($2);}
           ;
 structdef : TOK_STRUCT TOK_IDENT '{' type TOK_IDENT '}' ';'
-{ destroy($2); destroy($5, $6); $3 = $4; $$ = $1; }
+           { destroy($2); destroy($5, $6); $3 = $4; $$ = $1; }
           ;
 type      : plaintype 
-          | TOK_ARRAY '[' plaintype ']' {$$ = $1->adopt($3);}
           ;
 plaintype : TOK_INT
           | TOK_STRING
           | TOK_PTR 
           ;
-returntype: plaintype
+returntype: plaintype 
           | TOK_VOID
           ;
 token     : '(' | ')' | '[' | ']' | ',' | '}' | '{' | ';'
