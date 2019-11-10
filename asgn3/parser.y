@@ -67,7 +67,7 @@ parameters: type TOK_IDENT parameters {$$ = $1->adopt($2, $3); }
 	  ;
 block     : '{' '}'       {$$ = $1; }
 | '{' blockbody '}' { $$ = new astree(TOK_BLOCK, $1->loc, "{");
-				      $$->adopt($2); destroy($3);}
+   $$->adopt($2); destroy($3);}
           | ';' { destroy($1); }
           ;
 blockbody : blockbody statement{ $$ = $1->adopt($2); }
@@ -75,9 +75,7 @@ blockbody : blockbody statement{ $$ = $1->adopt($2); }
           ;
 statement : vardecl    { $$ = $1; }
 	  | expr ';'   { $$ = $1; destroy($2);}
-          | blockbody
           | return              { $$ = $1; }
-          | %empty {cout << "end statement" << endl; }
           ;
 vardecl   : type TOK_IDENT ';'   { destroy($3); $$ = $1;}
           | type TOK_IDENT '=' expr ';'
