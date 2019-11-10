@@ -40,7 +40,7 @@ using namespace std;
 start     : program              { $$ = $1 = nullptr;       }
           ;
 program   : program structdef    { $$ = $1->adopt ($2);     }
-| program function     { $$ = $1->adopt($2);     }
+          | program function     { $$ = $1->adopt($2);     }
           | program vardecl      { $$ = $1->adopt ($2);     }
           | program error '}'    { $$ = $1;                 }
           | program error ';'    { $$ = $1;                 }
@@ -58,21 +58,24 @@ plaintype : TOK_INT
           | TOK_VOID
           ;
 function  : plaintype TOK_IDENT '(' ')' block
-{ $$ = yytoken->adopt_sym($3, TOK_FUNC);
-  $3->adopt($2, $5);}
+{ astree* temp = new astree(TOK_FUNC, $1->loc, "");
+  $$ = temp->adopt($1); temp->adopt($2, $5); destroy($3, $4);}
           ;
 parameters: type TOK_IDENT parameters {$$ = $1->adopt($2, $3); }
 | ',' type TOK_IDENT parameters{destroy($1); $$ = $2->adopt($3, $4); }
 	  | %empty
 	  ;
-block     : '{' statement { $$ = $1->adopt($2);}
-          | block statement{ $$ = $1->adopt($2); }
-	  | '}' {destroy($1);}
+block     : '{' '}'       {$$ = $1; }
+| '{' blockbody '}' { $$ = new astree(TOK_BLOCK, $1->loc, "{");
+				      $$->adopt($2); destroy($3);}
           | ';' { destroy($1); }
           ;
+blockbody : blockbody statement{ $$ = $1->adopt($2); }
+          | statement {$$ = $1; }
+          ;
 statement : vardecl    { $$ = $1; }
-          | block      { $$ = $1; }
 	  | expr ';'   { $$ = $1; destroy($2);}
+          | blockbody
           | return              { $$ = $1; }
           | %empty {cout << "end statement" << endl; }
           ;
