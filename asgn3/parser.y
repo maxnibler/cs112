@@ -68,6 +68,7 @@ function  : plaintype TOK_IDENT '(' ')' block
           ;
 parameters: type TOK_IDENT {$$ = new astree(TOK_PARAM, $1->loc, "(");
    $$->adopt($1, $2);}
+| parameters ',' type TOK_IDENT {$$ = $1->adopt($3, $4); destroy($2);}
 	  ;
 block     : '{' { $$ = new astree(TOK_BLOCK, $1->loc, "{");}
           | block statement { $$ = $1->adopt($2); }
