@@ -75,7 +75,8 @@ extern int yydebug;
     TOK_STRINGCON = 281,
     TOK_ROOT = 282,
     TOK_BLOCK = 283,
-    TOK_CALL = 284
+    TOK_CALL = 284,
+    TOK_FUNC = 285
   };
 #endif
 

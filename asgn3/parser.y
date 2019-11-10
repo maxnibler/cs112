@@ -24,7 +24,7 @@ using namespace std;
 %token TOK_NULLPTR TOK_ARRAY TOK_ARROW TOK_ALLOC TOK_PTR
 %token TOK_EQ TOK_NE TOK_LT TOK_LE TOK_GT TOK_GE TOK_NOT
 %token TOK_IDENT TOK_INTCON TOK_CHARCON TOK_STRINGCON
-%token TOK_ROOT TOK_BLOCK TOK_CALL
+%token TOK_ROOT TOK_BLOCK TOK_CALL TOK_FUNC
 
 %right  '='
 %left   TOK_EQ TOK_NE TOK_LT TOK_LE TOK_GT TOK_GE
@@ -40,26 +40,40 @@ using namespace std;
 start     : program              { $$ = $1 = nullptr;       }
           ;
 program   : program structdef    { $$ = $1->adopt ($2);     }
-          | program function     { $$ = $1->adopt ($2);     }
+| program function     { $$ = $1->adopt_sym("", TOK_FUNC);     }
           | program vardecl      { $$ = $1->adopt ($2);     }
           | program error '}'    { $$ = $1;                 }
           | program error ';'    { $$ = $1;                 }
 	  | %empty               { $$ = parser::root;       }
 	  ;
+structdef : TOK_STRUCT TOK_IDENT '{' type TOK_IDENT '}' ';'
+           { destroy($2); destroy($5, $6); $3 = $4; $$ = $1; }
+          ;
 type      : plaintype
           | TOK_ARRAY
           ;
-returntype: TOK_INT
+plaintype : TOK_INT
           | TOK_STRING
           | TOK_PTR
           | TOK_VOID
           ;
-plaintype : TOK_INT
-          | TOK_STRING
-          | TOK_PTR 
+function  : plaintype TOK_IDENT '(' ')' block
+{ $$ = $1->adopt($2, $5); destroy($3, $4);}
           ;
-function  : returntype TOK_IDENT '(' ')' block
-{ $$ = $1->adopt($2, $5); destroy($3, $4); cout << "function" << endl;}
+parameters: type TOK_IDENT parameters {$$ = $1->adopt($2, $3); }
+| ',' type TOK_IDENT parameters{destroy($1); $$ = $2->adopt($3, $4); }
+	  | %empty
+	  ;
+block     : '{' statement { $$ = $1->adopt($2);}
+          | block statement{ $$ = $1->adopt($2); }
+	  | '}' {destroy($1);}
+          | ';' { destroy($1); }
+          ;
+statement : vardecl    { $$ = $1; }
+          | block      { $$ = $1; }
+	  | expr ';'   { $$ = $1; destroy($2);}
+          | return              { $$ = $1; }
+          | %empty {cout << "end statement" << endl; }
           ;
 vardecl   : type TOK_IDENT ';'   { destroy($3); $$ = $1;}
           | type TOK_IDENT '=' expr ';'
@@ -81,17 +95,6 @@ constant  : TOK_INTCON
           ;
 call      : TOK_IDENT '(' expr ')' { $$ = $1->adopt($3); }
           ;
-block     : '{' statement { $$ = $1->adopt($2);}
-          | block statement{ $$ = $1->adopt($2); }
-	  | '}' {destroy($1);}
-          | ';' { destroy($1); }
-          ;
-statement : vardecl    { $$ = $1; }
-          | block      { $$ = $1; }
-	  | expr ';'   { $$ = $1; destroy($2);}
-          | return              { $$ = $1; }
-          | %empty {cout << "end statement" << endl; }
-          ;
 return    : TOK_RETURN expr ';' {destroy($3); $$ = $1->adopt($2); }
           | TOK_RETURN ';' {destroy($2); $$ = $1; }
           ;
@@ -99,18 +102,6 @@ variable  : TOK_IDENT
           | expr ',' expr { $$ = $1->adopt($3); destroy($2);}
           | expr TOK_ARROW TOK_IDENT { $$ = $1->adopt($3); destroy($2);}
           ;
-structdef : TOK_STRUCT TOK_IDENT '{' type TOK_IDENT '}' ';'
-           { destroy($2); destroy($5, $6); $3 = $4; $$ = $1; }
-          ;
-token     : '[' | ']' | ',' | '}' | '{' | ';'
-          | '=' | '+' | '-' | '*' | '/' | '%' | TOK_NOT | TOK_PTR
-          | TOK_ROOT | TOK_VOID | TOK_INT | TOK_STRING
-          | TOK_IF | TOK_ELSE | TOK_WHILE | TOK_RETURN 
-          | TOK_NULLPTR | TOK_ARRAY | TOK_ARROW | TOK_ALLOC
-          | TOK_EQ | TOK_NE | TOK_LT | TOK_LE | TOK_GT | TOK_GE
-          | TOK_IDENT | TOK_INTCON | TOK_CHARCON | TOK_STRINGCON
-          ;
-
 %%
 
 
