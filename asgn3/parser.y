@@ -70,6 +70,7 @@ expr      : expr '+' expr { $$ = $2->adopt($1, $3);}
           | expr '*' expr { $$ = $2->adopt($1, $3);}
           | expr '/' expr { $$ = $2->adopt($1, $3);}
           | expr '%' expr { $$ = $2->adopt($1, $3);}
+          | expr '=' expr { $$ = $2->adopt($1, $3);}
           | variable
 	  | call
 	  | constant
@@ -80,13 +81,19 @@ constant  : TOK_INTCON
           ;
 call      : TOK_IDENT '(' expr ')' { $$ = $1->adopt($3); }
           ;
-block     : '{' statement '}' { $$ = $1->adopt($2); destroy($3);}
-| '{' statement statement '}' { $$ = $1->adopt($2, $3); destroy($4);}
+block     : '{' statement { $$ = $1->adopt($2);}
+          | block statement{ $$ = $1->adopt($2); }
+	  | '}' {destroy($1);}
           | ';' { destroy($1); }
           ;
-statement : vardecl  {cout << "vardecl" << endl; }
-          | block 
-	  | expr ';' { destroy($2); }
+statement : vardecl    { $$ = $1; }
+          | block      { $$ = $1; }
+	  | expr ';'   { $$ = $1; destroy($2);}
+          | return              { $$ = $1; }
+          | %empty {cout << "end statement" << endl; }
+          ;
+return    : TOK_RETURN expr ';' {destroy($3); $$ = $1->adopt($2); }
+          | TOK_RETURN ';' {destroy($2); $$ = $1; }
           ;
 variable  : TOK_IDENT
           | expr ',' expr { $$ = $1->adopt($3); destroy($2);}
