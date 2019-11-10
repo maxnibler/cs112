@@ -1,12 +1,19 @@
 // $Id: 03-test3.oc,v 1.1 2019-04-16 12:14:45-07 - - $
 
-int main(int test, int what) {
-   int a = 3;
-   int b = 8;
-   int c = a + b;
-   a = b + c;
+struct foo {
+   int a;
+};
+
+int main() {{
+   int a = 6;
+   ptr<struct foo> b = alloc<struct foo>();
+   b->a = 8;
+   a = a * b->a + 6;;
    putint (a);
+   putchr (' ');
+   putint (b->a);
    putchr ('\n');
    return SUCCESS;
+
 }
 
