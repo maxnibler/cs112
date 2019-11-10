@@ -64,7 +64,7 @@ function  : plaintype TOK_IDENT '(' ')' block
           | plaintype TOK_IDENT '(' parameters ')' block
 { $$ = new astree(TOK_FUNC, $1->loc, ""); destroy($3, $5);
              astree* temp = new astree(TOK_TYPE_ID, $1->loc, "");
-             $$->adopt(temp, $6); temp->adopt($1, $2); }
+             $$->adopt(temp, $4); $$->adopt($6); temp->adopt($1, $2); }
           ;
 parameters: type TOK_IDENT {$$ = $1->adopt($2); }
 	  ;

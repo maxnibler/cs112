@@ -1368,7 +1368,7 @@ yyreduce:
 #line 65 "parser.y"
     { yyval = new astree(TOK_FUNC, yyvsp[-5]->loc, ""); destroy(yyvsp[-3], yyvsp[-1]);
              astree* temp = new astree(TOK_TYPE_ID, yyvsp[-5]->loc, "");
-             yyval->adopt(temp, yyvsp[0]); temp->adopt(yyvsp[-5], yyvsp[-4]); }
+             yyval->adopt(temp, yyvsp[-2]); yyval->adopt(yyvsp[0]); temp->adopt(yyvsp[-5], yyvsp[-4]); }
 #line 1373 "yyparse.cpp"
     break;
 
