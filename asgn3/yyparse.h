@@ -77,7 +77,8 @@ extern int yydebug;
     TOK_BLOCK = 283,
     TOK_CALL = 284,
     TOK_FUNC = 285,
-    TOK_TYPE_ID = 286
+    TOK_TYPE_ID = 286,
+    TOK_PARAM = 287
   };
 #endif
 
