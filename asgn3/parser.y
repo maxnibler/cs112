@@ -24,7 +24,7 @@ using namespace std;
 %token TOK_NULLPTR TOK_ARRAY TOK_ARROW TOK_ALLOC TOK_PTR
 %token TOK_EQ TOK_NE TOK_LT TOK_LE TOK_GT TOK_GE TOK_NOT
 %token TOK_IDENT TOK_INTCON TOK_CHARCON TOK_STRINGCON
-%token TOK_ROOT TOK_BLOCK TOK_CALL TOK_FUNC
+%token TOK_ROOT TOK_BLOCK TOK_CALL TOK_FUNC TOK_TYPE_ID
 
 %right  '='
 %left   TOK_EQ TOK_NE TOK_LT TOK_LE TOK_GT TOK_GE
@@ -58,8 +58,9 @@ plaintype : TOK_INT
           | TOK_VOID
           ;
 function  : plaintype TOK_IDENT '(' ')' block
-{ $$ = new astree(TOK_FUNC, $1->loc, "");
-  $$->adopt($1); $$->adopt($2, $5); destroy($3, $4);}
+{ $$ = new astree(TOK_FUNC, $1->loc, ""); destroy($3, $4);
+             astree* temp = new astree(TOK_TYPE_ID, $1->loc, "");
+             $$->adopt(temp, $5); temp->adopt($1, $2); }
           ;
 parameters: type TOK_IDENT parameters {$$ = $1->adopt($2, $3); }
 | ',' type TOK_IDENT parameters{destroy($1); $$ = $2->adopt($3, $4); }

@@ -22,6 +22,7 @@ Terminals unused in grammar
     TOK_BLOCK
     TOK_CALL
     TOK_FUNC
+    TOK_TYPE_ID
     '^'
 
 
@@ -151,49 +152,50 @@ Terminals, with rules where they appear
     TOK_BLOCK (283)
     TOK_CALL (284)
     TOK_FUNC (285)
+    TOK_TYPE_ID (286)
 
 
 Nonterminals, with rules where they appear
 
-    $accept (44)
+    $accept (45)
         on left: 0
-    program (45)
+    program (46)
         on left: 1 2 3 4 5 6
         on right: 0 1 2 3 4 5
-    structdef (46)
+    structdef (47)
         on left: 7
         on right: 1
-    type (47)
+    type (48)
         on left: 8 9
         on right: 7 23 24
-    plaintype (48)
+    plaintype (49)
         on left: 10 11 12 13
         on right: 8 14
-    function (49)
+    function (50)
         on left: 14
         on right: 2
-    block (50)
+    block (51)
         on left: 15 16 17 18
         on right: 14 16 21
-    statement (51)
+    statement (52)
         on left: 19 20 21 22
         on right: 16
-    vardecl (52)
+    vardecl (53)
         on left: 23 24
         on right: 3 19
-    expr (53)
+    expr (54)
         on left: 25 26 27 28 29 30 31 32 33
         on right: 20 24 25 26 27 28 29 30 37 38 41 42
-    constant (54)
+    constant (55)
         on left: 34 35 36
         on right: 33
-    call (55)
+    call (56)
         on left: 37
         on right: 32
-    return (56)
+    return (57)
         on left: 38 39
         on right: 22
-    variable (57)
+    variable (58)
         on left: 40 41 42
         on right: 31
 
