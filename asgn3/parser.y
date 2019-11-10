@@ -61,10 +61,12 @@ function  : plaintype TOK_IDENT '(' ')' block
 { $$ = new astree(TOK_FUNC, $1->loc, ""); destroy($3, $4);
              astree* temp = new astree(TOK_TYPE_ID, $1->loc, "");
              $$->adopt(temp, $5); temp->adopt($1, $2); }
+          | plaintype TOK_IDENT '(' parameters ')' block
+{ $$ = new astree(TOK_FUNC, $1->loc, ""); destroy($3, $5);
+             astree* temp = new astree(TOK_TYPE_ID, $1->loc, "");
+             $$->adopt(temp, $6); temp->adopt($1, $2); }
           ;
-parameters: type TOK_IDENT parameters {$$ = $1->adopt($2, $3); }
-| ',' type TOK_IDENT parameters{destroy($1); $$ = $2->adopt($3, $4); }
-	  | %empty
+parameters: type TOK_IDENT {$$ = $1->adopt($2); }
 	  ;
 block     : '{' { $$ = new astree(TOK_BLOCK, $1->loc, "{");}
           | block statement { $$ = $1->adopt($2); }
