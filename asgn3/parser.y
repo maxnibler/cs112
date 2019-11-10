@@ -58,8 +58,8 @@ plaintype : TOK_INT
           | TOK_VOID
           ;
 function  : plaintype TOK_IDENT '(' ')' block
-{ astree* temp = new astree(TOK_FUNC, $1->loc, "");
-  $$ = temp->adopt($1); temp->adopt($2, $5); destroy($3, $4);}
+{ $$ = new astree(TOK_FUNC, $1->loc, "");
+  $$->adopt($1); $$->adopt($2, $5); destroy($3, $4);}
           ;
 parameters: type TOK_IDENT parameters {$$ = $1->adopt($2, $3); }
 | ',' type TOK_IDENT parameters{destroy($1); $$ = $2->adopt($3, $4); }

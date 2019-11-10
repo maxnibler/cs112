@@ -15,8 +15,10 @@ HYGEN = yyparse.h
 CYGEN = yyparse.cpp
 LREPORT = yylex.output
 YREPORT = yyparse.output
+GEN = ${CLGEN} ${CYGEN} ${HYGEN} ${LREPORT} ${YREPORT}
+SOURCE = ${LSOURCES} ${YSOURCES}
 
-all : $(HYGEN) $(OBJ)
+all : $(HYGEN) $(CLGEN) $(OBJ)
 	$(GPP) $(WARN) -o $(EXEC) $(OBJ)
 
 %.o : %.cpp
@@ -35,7 +37,7 @@ $(CYGEN) $(HYGEN) : $(YSOURCES)
 	bison --defines=$(HYGEN) --output=$(CYGEN) $(YSOURCES)
 
 clean :
-	rm $(OBJ)
+	rm $(EXEC)
 
 open :
 	emacs main.cpp&
@@ -45,7 +47,7 @@ open :
 	emacs lyutils.cpp&
 
 spotless :
-	rm $(EXEC) $(OBJ)
+	rm $(EXEC) $(OBJ) $(GEN)
 
 ci :
 	git commit -am "Generic commit"
@@ -62,6 +64,6 @@ test :
 	cat 03-test3.oc
 
 submit :
-	submit cse110a-wm.f19 asg2 Makefile README $(LSOURCES)
-	submit cse110a-wm.f19 asg2 $(CPP) $(HEAD) $(YSOURCES) $(HYGEN)
+	submit cse110a-wm.f19 asg2 Makefile README
+	submit cse110a-wm.f19 asg2 $(CPP) $(HEAD) $(SOURCE)
 
