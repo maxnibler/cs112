@@ -9,6 +9,11 @@ int main() {{
    ptr<struct foo> b = alloc<struct foo>();
    b->a = 8;
    a = a * b->a + 6;;
+   if (n>1){
+     f =  f * 2;
+     } else {
+     f = f * 4;
+     }
    putint (a);
    putchr (' ');
    putint (b->a);
