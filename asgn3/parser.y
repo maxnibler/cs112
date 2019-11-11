@@ -42,8 +42,8 @@ program   : program structdef    { $$ = $1->adopt ($2);     }
           | program vardecl      { $$ = $1->adopt ($2);     }
           | program error '}'    { $$ = $1;                 }
           | program error ';'    { $$ = $1;                 }
-	  | %empty               { $$ = parser::root;       }
-	  ;
+          | %empty               { $$ = parser::root;       }
+          ;
 structdef : structdec '}' ';'
            { destroy($2, $3); }
           ;
@@ -57,7 +57,7 @@ type      : TOK_INT
            { $$ = $1->adopt($3, $4); destroy($2, $5); }
           | TOK_VOID
           | TOK_ARRAY TOK_LT type TOK_GT
-	   { $$ = $1->adopt($3); destroy($2, $4); }
+           { $$ = $1->adopt($3); destroy($2, $4); }
           ;
 function  : funbod ';' {$$ = $1; destroy($2); }
           | funbod block
@@ -69,12 +69,12 @@ funbod    : type TOK_IDENT parameters
              temp->adopt($1, $2); $$->adopt(temp, $3);}
           ;
 parameters: parambod ')' { destroy($2); }
-	  ;
+          ;
 parambod  : '(' {$$ = new astree(TOK_PARAM, $1->loc, "("); }
           | parambod type TOK_IDENT
             { $$ = $1->adopt($2, $3);}
           | parambod ',' type TOK_IDENT
-	   { $$ = $1->adopt($3, $4); destroy($2);                }
+           { $$ = $1->adopt($3, $4); destroy($2);                }
           ;
 block     : body '}'
           ;
@@ -82,10 +82,10 @@ body      : '{'
            { $$ = new astree(TOK_BLOCK, $1->loc, "{");}
           | body statement { $$ = $1->adopt($2); }
 statement : vardecl    { $$ = $1; }
-	  | expr ';'   { $$ = $1; destroy($2);}
+          | expr ';'   { $$ = $1; destroy($2);}
           | block
-	  | while
-	  | ifelse
+          | while
+          | ifelse
           | return              { $$ = $1; }
           | ';'
           ;
@@ -100,7 +100,7 @@ while     : TOK_WHILE '(' expr ')' statement
 ifelse    : TOK_IF '(' expr ')' statement
            { $$ = $1->adopt($3, $5); destroy($2, $4); }
           | ifelse TOK_ELSE statement
-	   { $$ = $1->adopt($2); $2->adopt($3); }
+           { $$ = $1->adopt($2); $2->adopt($3); }
           ;
 return    : TOK_RETURN expr ';' {destroy($3); $$ = $1->adopt($2); }
           | TOK_RETURN ';' {destroy($2); $$ = $1; }
@@ -108,10 +108,10 @@ return    : TOK_RETURN expr ';' {destroy($3); $$ = $1->adopt($2); }
 expr      : expr binop expr { $$ = $2->adopt($1, $3);}
           | unop expr { $$ = $1->adopt($2); }
           | variable
-	  | call
-	  | constant
-	  | allocator
-	  | '(' expr ')' { $$ = $2; destroy($1, $3);}
+          | call
+          | constant
+          | allocator
+          | '(' expr ')' { $$ = $2; destroy($1, $3);}
           ;
 binop     : '+' | '-' | '*' | '/' | '%' | '=' | '^'
           | TOK_GT | TOK_GE | TOK_LT | TOK_LE | TOK_NE
@@ -122,10 +122,10 @@ unop      : '+' | '-' | TOK_NOT
 allocator : TOK_ALLOC TOK_LT TOK_STRING TOK_GT '(' expr ')'
            { $$ = $1->adopt($3,$6);}
           | TOK_ALLOC TOK_LT TOK_STRUCT TOK_IDENT TOK_GT '(' ')'
-	   { $$ = $1->adopt($3, $4);}
+           { $$ = $1->adopt($3, $4);}
           | TOK_ALLOC TOK_LT TOK_ARRAY TOK_LT type
-	    TOK_GT TOK_GT '(' expr ')'
-	   { $$ = $1->adopt($3, $5); $$->adopt($9); }
+            TOK_GT TOK_GT '(' expr ')'
+           { $$ = $1->adopt($3, $5); $$->adopt($9); }
           ;
 call      : callbod ')' {$$ = $1; destroy($2);}
           ;
