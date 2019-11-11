@@ -1,29 +1,29 @@
 Nonterminals useless in grammar
 
-    start
+   start
 
 
 Terminals unused in grammar
 
-    TOK_IF
-    TOK_ELSE
-    TOK_WHILE
-    TOK_NULLPTR
-    TOK_ALLOC
-    TOK_EQ
-    TOK_NE
-    TOK_LT
-    TOK_LE
-    TOK_GT
-    TOK_GE
-    TOK_NOT
-    TOK_ROOT
-    TOK_BLOCK
-    TOK_CALL
-    TOK_FUNC
-    TOK_TYPE_ID
-    TOK_PARAM
-    '^'
+   TOK_IF
+   TOK_ELSE
+   TOK_WHILE
+   TOK_NULLPTR
+   TOK_ALLOC
+   TOK_EQ
+   TOK_NE
+   TOK_LT
+   TOK_LE
+   TOK_GT
+   TOK_GE
+   TOK_NOT
+   TOK_ROOT
+   TOK_BLOCK
+   TOK_CALL
+   TOK_FUNC
+   TOK_TYPE_ID
+   TOK_PARAM
+   '^'
 
 
 Rules useless in grammar
@@ -110,99 +110,86 @@ Grammar
 
 Terminals, with rules where they appear
 
-    $end (0) 0
-    '%' (37) 32
-    '(' (40) 14 15 40
-    ')' (41) 14 15 40
-    '*' (42) 30
-    '+' (43) 28
-    ',' (44) 17 44
-    '-' (45) 29
-    '/' (47) 31
-    ';' (59) 5 7 21 23 26 27 41 42
-    '=' (61) 27 33
-    '^' (94)
-    '{' (123) 7 18
-    '}' (125) 4 7 20
-    error (256) 4 5
-    TOK_VOID (258) 13
-    TOK_INT (259) 10
-    TOK_STRING (260) 11
-    TOK_IF (261)
-    TOK_ELSE (262)
-    TOK_WHILE (263)
-    TOK_RETURN (264) 41 42
-    TOK_STRUCT (265) 7
-    TOK_NULLPTR (266)
-    TOK_ARRAY (267) 9
-    TOK_ARROW (268) 45
-    TOK_ALLOC (269)
-    TOK_PTR (270) 12
-    TOK_EQ (271)
-    TOK_NE (272)
-    TOK_LT (273)
-    TOK_LE (274)
-    TOK_GT (275)
-    TOK_GE (276)
-    TOK_NOT (277)
-    TOK_IDENT (278) 7 14 15 16 17 26 27 40 43 45
-    TOK_INTCON (279) 37
-    TOK_CHARCON (280) 39
-    TOK_STRINGCON (281) 38
-    TOK_ROOT (282)
-    TOK_BLOCK (283)
-    TOK_CALL (284)
-    TOK_FUNC (285)
-    TOK_TYPE_ID (286)
-    TOK_PARAM (287)
+$end (0) 0
+'%' (37) 32
+'(' (40) 14 15 40
+')' (41) 14 15 40
+'*' (42) 30
+'+' (43) 28
+',' (44) 17 44
+'-' (45) 29
+'/' (47) 31
+';' (59) 5 7 21 23 26 27 41 42
+'=' (61) 27 33
+'^' (94)
+'{' (123) 7 18
+'}' (125) 4 7 20
+error (256) 4 5
+TOK_VOID (258) 13
+TOK_INT (259) 10
+TOK_STRING (260) 11
+TOK_IF (261)
+TOK_ELSE (262)
+TOK_WHILE (263)
+TOK_RETURN (264) 41 42
+TOK_STRUCT (265) 7
+TOK_NULLPTR (266)
+TOK_ARRAY (267) 9
+TOK_ARROW (268) 45
+TOK_ALLOC (269)
+TOK_PTR (270) 12
+TOK_EQ (271)
+TOK_NE (272)
+TOK_LT (273)
+TOK_LE (274)
+TOK_GT (275)
+TOK_GE (276)
+TOK_NOT (277)
+TOK_IDENT (278) 7 14 15 16 17 26 27 40 43 45
+TOK_INTCON (279) 37
+TOK_CHARCON (280) 39
+TOK_STRINGCON (281) 38
+TOK_ROOT (282)
+TOK_BLOCK (283)
+TOK_CALL (284)
+TOK_FUNC (285)
+TOK_TYPE_ID (286)
+TOK_PARAM (287)
 
 
 Nonterminals, with rules where they appear
 
-    $accept (46)
-        on left: 0
-    program (47)
-        on left: 1 2 3 4 5 6
-        on right: 0 1 2 3 4 5
-    structdef (48)
-        on left: 7
-        on right: 1
-    type (49)
-        on left: 8 9
-        on right: 7 16 17 26 27
-    plaintype (50)
-        on left: 10 11 12 13
-        on right: 8 14 15
-    function (51)
-        on left: 14 15
-        on right: 2
-    parameters (52)
-        on left: 16 17
-        on right: 15 17
-    block (53)
-        on left: 18 19 20 21
-        on right: 14 15 19 24
-    statement (54)
-        on left: 22 23 24 25
-        on right: 19
-    vardecl (55)
-        on left: 26 27
-        on right: 3 22
-    expr (56)
-        on left: 28 29 30 31 32 33 34 35 36
-        on right: 23 27 28 29 30 31 32 33 40 41 44 45
-    constant (57)
-        on left: 37 38 39
-        on right: 36
-    call (58)
-        on left: 40
-        on right: 35
-    return (59)
-        on left: 41 42
-        on right: 25
-    variable (60)
-        on left: 43 44 45
-        on right: 34
+$accept (46)
+    on left: 0
+program (47)
+    on left: 1 2 3 4 5 6, on right: 0 1 2 3 4 5
+structdef (48)
+    on left: 7, on right: 1
+type (49)
+    on left: 8 9, on right: 7 16 17 26 27
+plaintype (50)
+    on left: 10 11 12 13, on right: 8 14 15
+function (51)
+    on left: 14 15, on right: 2
+parameters (52)
+    on left: 16 17, on right: 15 17
+block (53)
+    on left: 18 19 20 21, on right: 14 15 19 24
+statement (54)
+    on left: 22 23 24 25, on right: 19
+vardecl (55)
+    on left: 26 27, on right: 3 22
+expr (56)
+    on left: 28 29 30 31 32 33 34 35 36, on right: 23 27 28 29 30 31
+    32 33 40 41 44 45
+constant (57)
+    on left: 37 38 39, on right: 36
+call (58)
+    on left: 40, on right: 35
+return (59)
+    on left: 41 42, on right: 25
+variable (60)
+    on left: 43 44 45, on right: 34
 
 
 State 0
