@@ -79,7 +79,7 @@ parambod  : '(' {$$ = new astree(TOK_PARAM, $1->loc, "("); }
 block     : body '}'
           ;
 body      : '{'  
-          { $$ = new astree(TOK_BLOCK, $1->loc, "{");}
+           { $$ = new astree(TOK_BLOCK, $1->loc, "{");}
           | body statement { $$ = $1->adopt($2); }
 statement : vardecl    { $$ = $1; }
 	  | expr ';'   { $$ = $1; destroy($2);}
@@ -100,7 +100,7 @@ while     : TOK_WHILE '(' expr ')' statement
 ifelse    : TOK_IF '(' expr ')' statement
            { $$ = $1->adopt($3, $5); destroy($2, $4); }
           | ifelse TOK_ELSE statement
-	  { $$ = $1->adopt($2); $2->adopt($3); }
+	   { $$ = $1->adopt($2); $2->adopt($3); }
           ;
 return    : TOK_RETURN expr ';' {destroy($3); $$ = $1->adopt($2); }
           | TOK_RETURN ';' {destroy($2); $$ = $1; }
@@ -120,12 +120,12 @@ binop     : '+' | '-' | '*' | '/' | '%' | '=' | '^'
 unop      : '+' | '-' | TOK_NOT
           ;
 allocator : TOK_ALLOC TOK_LT TOK_STRING TOK_GT '(' expr ')'
-           { $$ = $1->adopt($6);}
+           { $$ = $1->adopt($3,$6);}
           | TOK_ALLOC TOK_LT TOK_STRUCT TOK_IDENT TOK_GT '(' ')'
-	  { $$ = $1->adopt($3, $4);}
+	   { $$ = $1->adopt($3, $4);}
           | TOK_ALLOC TOK_LT TOK_ARRAY TOK_LT type
 	    TOK_GT TOK_GT '(' expr ')'
-           { $$ = $1->adopt($9); }
+	   { $$ = $1->adopt($3, $5); $$->adopt($9); }
           ;
 call      : callbod ')' {$$ = $1; destroy($2);}
           ;
@@ -136,7 +136,7 @@ callbod   : TOK_IDENT '('
           | callbod ',' expr { $$ = $1->adopt($3); destroy($2); }
 variable  : TOK_IDENT
           | expr TOK_ARROW TOK_IDENT { $$ = $2->adopt($1, $3);}
-          | expr '[' expr ']' { $$ = $1->adopt($3); }
+          | expr '[' expr ']' { $$ = $1->adopt($3); destroy($2, $4); }
           ;
 constant  : TOK_INTCON
           | TOK_STRINGCON
