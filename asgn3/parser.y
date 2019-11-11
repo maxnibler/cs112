@@ -62,19 +62,21 @@ plaintype : TOK_INT
           | TOK_PTR TOK_LT TOK_STRUCT TOK_IDENT TOK_GT
           | TOK_VOID
           ;
-function  : plaintype TOK_IDENT '('
-           { $$ = new astree(TOK_FUNC, $1->loc, ""); destroy($3);
+function  : plaintype TOK_IDENT
+           { $$ = new astree(TOK_FUNC, $1->loc, "");
              astree* temp = new astree(TOK_TYPE_ID, $1->loc, "");
              temp->adopt($1, $2); $$->adopt(temp);}
           | function parameters
            { $$ = $1->adopt($2); }
-| function ')' block
-{ $$ = $1->adopt($3); destroy($2); }
+| function block
+{ $$ = $1->adopt($2); }
           ;
-parameters: type TOK_IDENT { $$ = new astree(TOK_PARAM, $1->loc, "(");
-                             $$->adopt($1, $2);}
+parameters: '(' {$$ = new astree(TOK_PARAM, $1->loc, "("); }
+          | parameters type TOK_IDENT
+            { $$ = $1->adopt($2, $3);}
           | parameters ',' type TOK_IDENT
-	   { $$ = $1->adopt($3, $4); destroy($2);                     }
+	   { $$ = $1->adopt($3, $4); destroy($2);                }
+          | parameters ')' { destroy($2); }
 	  ;
 block     : '{' { $$ = new astree(TOK_BLOCK, $1->loc, "{");}
           | block statement { $$ = $1->adopt($2); }
@@ -98,7 +100,7 @@ while     : TOK_WHILE '(' expr ')' statement
 ifelse    : TOK_IF '(' expr ')' statement
            { $$ = $1->adopt($3, $5); destroy($2, $4); }
           | ifelse TOK_ELSE statement
-           { $$ = $1->adopt($2, $3); }
+	  { $$ = $1->adopt($2); $2->adopt($3); }
           ;
 return    : TOK_RETURN expr ';' {destroy($3); $$ = $1->adopt($2); }
           | TOK_RETURN ';' {destroy($2); $$ = $1; }
