@@ -44,13 +44,13 @@ program   : program structdef    { $$ = $1->adopt ($2);     }
           | program error ';'    { $$ = $1;                 }
 	  | %empty               { $$ = parser::root;       }
 	  ;
-structdef : TOK_STRUCT TOK_IDENT '{'
-           { $$ = $1->adopt($2); destroy($3); }
-          | structdef type TOK_IDENT ';'
-           { $$ = $1->adopt($2, $3); destroy($4); }
-          | structdef '}' ';'
-           { $$ = $1; destroy($2, $3);                      }
+structdef : structdec '}' ';'
+           { destroy($2, $3); }
           ;
+structdec : TOK_STRUCT TOK_IDENT '{'
+           { $$ = $1->adopt($2); destroy($3); }
+          | structdec type TOK_IDENT ';'
+           { $$ = $1->adopt($2, $3); destroy($4); }
 type      : plaintype
           | TOK_ARRAY '<' plaintype '>' { $$ = $1->adopt($3); }
           ;
@@ -76,10 +76,11 @@ parameters: '(' {$$ = new astree(TOK_PARAM, $1->loc, "("); }
 	   { $$ = $1->adopt($3, $4); destroy($2);                }
           | parameters ')' { destroy($2); }
 	  ;
-block     : '{' { $$ = new astree(TOK_BLOCK, $1->loc, "{");}
-          | block statement { $$ = $1->adopt($2); }
-          | block '}' {destroy($2);}
+block     : body '}'
           ;
+body      : '{'  
+{ $$ = new astree(TOK_BLOCK, $1->loc, "{");}
+| body statement { $$ = $1->adopt($2); }
 statement : vardecl    { $$ = $1; }
 	  | expr ';'   { $$ = $1; destroy($2);}
           | block

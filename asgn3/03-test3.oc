@@ -2,9 +2,10 @@
 struct foo {
  int fuck;
  string me;
+ int fuck;
 };
 
-int main( int test1 , string test2) {
+int main() {
    int a = 6;
    ptr<struct foo> b = alloc<struct foo>();
    b->a = 8;
