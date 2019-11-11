@@ -461,8 +461,8 @@ static const yytype_uint8 yyrline[] =
       76,    77,    79,    80,    81,    82,    83,    84,    85,    87,
       88,    91,    94,    96,    99,   100,   102,   103,   104,   105,
      106,   107,   108,   109,   110,   111,   112,   113,   114,   115,
-     116,   117,   118,   120,   122,   124,   127,   128,   129,   130,
-     132,   135,   136,   138,   139
+     116,   117,   118,   120,   122,   124,   128,   129,   130,   131,
+     133,   136,   137,   139,   140
 };
 #endif
 
@@ -1623,32 +1623,32 @@ yyreduce:
     break;
 
   case 55:
-#line 125 "parser.y"
+#line 126 "parser.y"
     { yyval = yyvsp[-9]->adopt(yyvsp[-1]); }
 #line 1629 "yyparse.cpp"
     break;
 
   case 60:
-#line 133 "parser.y"
+#line 134 "parser.y"
     { yyval = new astree(TOK_CALL, yyvsp[-1]->loc, "(");
              yyval->adopt(yyvsp[-1]); destroy(yyvsp[0]);}
 #line 1636 "yyparse.cpp"
     break;
 
   case 61:
-#line 135 "parser.y"
+#line 136 "parser.y"
     { yyval = yyvsp[-1]->adopt(yyvsp[0]); }
 #line 1642 "yyparse.cpp"
     break;
 
   case 62:
-#line 136 "parser.y"
+#line 137 "parser.y"
     {yyval = yyvsp[-1]; destroy(yyvsp[0]);}
 #line 1648 "yyparse.cpp"
     break;
 
   case 64:
-#line 139 "parser.y"
+#line 140 "parser.y"
     { yyval = yyvsp[-1]->adopt(yyvsp[-2], yyvsp[0]);}
 #line 1654 "yyparse.cpp"
     break;
@@ -1886,7 +1886,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 141 "parser.y"
+#line 142 "parser.y"
 
 
 
