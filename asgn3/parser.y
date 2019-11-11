@@ -11,7 +11,6 @@ using namespace std;
 
 %debug
 %defines
-%error-verbose
 %token-table
 %verbose
 
@@ -38,8 +37,6 @@ using namespace std;
 
 %%
 
-start     : program              { $$ = $1 = nullptr;       }
-          ;
 program   : program structdef    { $$ = $1->adopt ($2);     }
           | program function     { $$ = $1->adopt ($2);     }
           | program vardecl      { $$ = $1->adopt ($2);     }
@@ -52,14 +49,15 @@ structdef : TOK_STRUCT TOK_IDENT '{'
           | structdef type TOK_IDENT ';'
            { $$ = $1->adopt($2, $3); destroy($4); }
           | structdef '}' ';'
-           { $$ = $1; destroy($2, $3); }
+           { $$ = $1; destroy($2, $3);                      }
           ;
 type      : plaintype
-          | TOK_ARRAY
+          | TOK_ARRAY '<' plaintype '>' { $$ = $1->adopt($3); }
           ;
 plaintype : TOK_INT
           | TOK_STRING
           | TOK_PTR TOK_LT TOK_STRUCT TOK_IDENT TOK_GT
+           { $$ = $1->adopt($3, $4); destroy($2, $5); }
           | TOK_VOID
           ;
 function  : plaintype TOK_IDENT
@@ -105,23 +103,16 @@ ifelse    : TOK_IF '(' expr ')' statement
 return    : TOK_RETURN expr ';' {destroy($3); $$ = $1->adopt($2); }
           | TOK_RETURN ';' {destroy($2); $$ = $1; }
           ;
-expr      : expr '+' expr { $$ = $2->adopt($1, $3);}
-          | expr '-' expr { $$ = $2->adopt($1, $3);}
-          | expr '*' expr { $$ = $2->adopt($1, $3);}
-          | expr '/' expr { $$ = $2->adopt($1, $3);}
-          | expr '%' expr { $$ = $2->adopt($1, $3);}
-          | expr '=' expr { $$ = $2->adopt($1, $3);}
-          | expr TOK_GT expr { $$ = $2->adopt($1, $3);}
-          | expr TOK_LT expr { $$ = $2->adopt($1, $3);}
-          | expr TOK_LE expr { $$ = $2->adopt($1, $3);}
-          | expr TOK_GE expr { $$ = $2->adopt($1, $3);}
-          | expr TOK_EQ expr { $$ = $2->adopt($1, $3);}
-          | expr TOK_NE expr { $$ = $2->adopt($1, $3);}
+expr      : expr binop expr { $$ = $2->adopt($1, $3);}
           | variable
 	  | call
 	  | constant
 	  | allocator
 	  | '(' expr ')' { $$ = $2; destroy($1, $3);}
+          ;
+binop     : '+' | '-' | '*' | '/' | '%' | '=' | '^'
+          | TOK_GT | TOK_GE | TOK_LT | TOK_LE | TOK_NE
+          | TOK_EQ
           ;
 allocator : TOK_ALLOC TOK_LT TOK_STRING TOK_GT '(' expr ')'
            { $$ = $1->adopt($6);}
@@ -131,11 +122,6 @@ allocator : TOK_ALLOC TOK_LT TOK_STRING TOK_GT '(' expr ')'
 	    TOK_GT TOK_GT '(' expr ')'
            { $$ = $1->adopt($9); }
           ;
-constant  : TOK_INTCON
-          | TOK_STRINGCON
-          | TOK_CHARCON
-          | TOK_NULLPTR
-          ;
 call      : TOK_IDENT '(' 
            { $$ = new astree(TOK_CALL, $1->loc, "(");
              $$->adopt($1); destroy($2);}
@@ -144,6 +130,11 @@ call      : TOK_IDENT '('
           ;
 variable  : TOK_IDENT
           | expr TOK_ARROW TOK_IDENT { $$ = $2->adopt($1, $3);}
+          ;
+constant  : TOK_INTCON
+          | TOK_STRINGCON
+          | TOK_CHARCON
+          | TOK_NULLPTR
           ;
 %%
 

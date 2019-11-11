@@ -1,4 +1,8 @@
 // $Id: 03-test3.oc,v 1.1 2019-04-16 12:14:45-07 - - $
+struct foo {
+ int fuck;
+ string me;
+};
 
 int main( int test1 , string test2) {
    int a = 6;
