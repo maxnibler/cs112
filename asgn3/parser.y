@@ -66,8 +66,8 @@ function  : plaintype TOK_IDENT
              temp->adopt($1, $2); $$->adopt(temp);}
           | function parameters
            { $$ = $1->adopt($2); }
-| function block
-{ $$ = $1->adopt($2); }
+          | function block
+          { $$ = $1->adopt($2); }
           ;
 parameters: '(' {$$ = new astree(TOK_PARAM, $1->loc, "("); }
           | parameters type TOK_IDENT
@@ -89,9 +89,10 @@ statement : vardecl    { $$ = $1; }
           | return              { $$ = $1; }
           | ';'
           ;
-vardecl   : type TOK_IDENT ';'   { destroy($3); $$ = $1;}
-          | type TOK_IDENT '=' expr ';'
-	   { destroy($3, $5); $$ = $1->adopt ($2); $$ = $1->adopt($4);}
+vardecl   : varbod ';'   { destroy($2); $$ = $1;}
+          ;
+varbod    : type TOK_IDENT {$$ = $1->adopt($2); }
+          | varbod '=' expr {destroy($2), $$ = $1->adopt($3); }
           ;
 while     : TOK_WHILE '(' expr ')' statement
            { $$ = $1->adopt($3, $5); destroy($2, $4); }
@@ -105,6 +106,7 @@ return    : TOK_RETURN expr ';' {destroy($3); $$ = $1->adopt($2); }
           | TOK_RETURN ';' {destroy($2); $$ = $1; }
           ;
 expr      : expr binop expr { $$ = $2->adopt($1, $3);}
+          | unop expr { $$ = $1->adopt($2); }
           | variable
 	  | call
 	  | constant
@@ -115,20 +117,23 @@ binop     : '+' | '-' | '*' | '/' | '%' | '=' | '^'
           | TOK_GT | TOK_GE | TOK_LT | TOK_LE | TOK_NE
           | TOK_EQ
           ;
+unop      : '+' | '-' | TOK_NOT
+          ;
 allocator : TOK_ALLOC TOK_LT TOK_STRING TOK_GT '(' expr ')'
            { $$ = $1->adopt($6);}
           | TOK_ALLOC TOK_LT TOK_STRUCT TOK_IDENT TOK_GT '(' ')'
-           { $$ = $1;}
+	  { $$ = $1->adopt($3, $4);}
           | TOK_ALLOC TOK_LT TOK_ARRAY TOK_LT plaintype
 	    TOK_GT TOK_GT '(' expr ')'
            { $$ = $1->adopt($9); }
           ;
-call      : TOK_IDENT '(' 
-           { $$ = new astree(TOK_CALL, $1->loc, "(");
-             $$->adopt($1); destroy($2);}
-          | call expr { $$ = $1->adopt($2); }
-          | call ')' {$$ = $1; destroy($2);}
+call      : callbod ')' {$$ = $1; destroy($2);}
           ;
+callbod   : TOK_IDENT '(' 
+           { $$ = new astree(TOK_CALL, $1->loc, "(");
+             $$->adopt($1); destroy($2);} 
+          | callbod expr { $$ = $1->adopt($2); }
+          | callbod ',' expr { $$ = $1->adopt($3); destroy($2); }
 variable  : TOK_IDENT
           | expr TOK_ARROW TOK_IDENT { $$ = $2->adopt($1, $3);}
           ;

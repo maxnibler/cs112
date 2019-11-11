@@ -60,7 +60,7 @@ IDENT           ({LETTER}({LETTER}|{DIGIT})*)
 "return"             { return lexer::token(TOK_RETURN); }
 "alloc"              { return lexer::token(TOK_ALLOC);  }
 "nullptr"            { return lexer::token(TOK_NULLPTR);}
-"not"                { return lexer::token(TOK_NOT);    }
+"!"                { return lexer::token(TOK_NOT);    }
 "int"                { return lexer::token(TOK_INT);    }
 "string"             { return lexer::token(TOK_STRING); }
 "struct"             { return lexer::token(TOK_STRUCT); }
