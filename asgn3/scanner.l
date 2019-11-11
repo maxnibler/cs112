@@ -48,7 +48,7 @@ IDENT           ({LETTER}({LETTER}|{DIGIT})*)
 ","                  { return lexer::token(',');        }
 "="                  { return lexer::token('=');        }
 "=="                 { return lexer::token(TOK_EQ);     }
-"<>"                 { return lexer::token(TOK_NE);     }
+"!="                 { return lexer::token(TOK_NE);     }
 "<"                  { return lexer::token(TOK_LT);     }
 ">"                  { return lexer::token(TOK_GT);     }
 "<="                 { return lexer::token(TOK_LE);     }
@@ -60,7 +60,7 @@ IDENT           ({LETTER}({LETTER}|{DIGIT})*)
 "return"             { return lexer::token(TOK_RETURN); }
 "alloc"              { return lexer::token(TOK_ALLOC);  }
 "nullptr"            { return lexer::token(TOK_NULLPTR);}
-"!"                { return lexer::token(TOK_NOT);    }
+"!"                  { return lexer::token(TOK_NOT);    }
 "int"                { return lexer::token(TOK_INT);    }
 "string"             { return lexer::token(TOK_STRING); }
 "struct"             { return lexer::token(TOK_STRUCT); }

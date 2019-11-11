@@ -59,9 +59,9 @@ ssh :
 	ssh mnibler@unix.ucsc.edu
 
 test :
-	./oc 03-test3.oc
-	cat 03-test3.ast
-	cat 03-test3.oc
+	./oc 01-test.oc
+	cat 01-test.ast
+	cat 01-test.oc
 
 submit :
 	submit cse110a-wm.f19 asg3 Makefile README

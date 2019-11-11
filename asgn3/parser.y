@@ -51,16 +51,15 @@ structdec : TOK_STRUCT TOK_IDENT '{'
            { $$ = $1->adopt($2); destroy($3); }
           | structdec type TOK_IDENT ';'
            { $$ = $1->adopt($2, $3); destroy($4); }
-type      : plaintype
-          | TOK_ARRAY '<' plaintype '>' { $$ = $1->adopt($3); }
-          ;
-plaintype : TOK_INT
+type      : TOK_INT
           | TOK_STRING
           | TOK_PTR TOK_LT TOK_STRUCT TOK_IDENT TOK_GT
            { $$ = $1->adopt($3, $4); destroy($2, $5); }
           | TOK_VOID
+          | TOK_ARRAY TOK_LT type TOK_GT
+	   { $$ = $1->adopt($3); destroy($2, $4); }
           ;
-function  : plaintype TOK_IDENT
+function  : type TOK_IDENT
            { $$ = new astree(TOK_FUNC, $1->loc, "");
              astree* temp = new astree(TOK_TYPE_ID, $1->loc, "");
              temp->adopt($1, $2); $$->adopt(temp);}
@@ -69,13 +68,14 @@ function  : plaintype TOK_IDENT
           | function block
           { $$ = $1->adopt($2); }
           ;
-parameters: '(' {$$ = new astree(TOK_PARAM, $1->loc, "("); }
-          | parameters type TOK_IDENT
-            { $$ = $1->adopt($2, $3);}
-          | parameters ',' type TOK_IDENT
-	   { $$ = $1->adopt($3, $4); destroy($2);                }
-          | parameters ')' { destroy($2); }
+parameters: parambod ')' { destroy($2); }
 	  ;
+parambod  : '(' {$$ = new astree(TOK_PARAM, $1->loc, "("); }
+          | parambod type TOK_IDENT
+            { $$ = $1->adopt($2, $3);}
+          | parambod ',' type TOK_IDENT
+	   { $$ = $1->adopt($3, $4); destroy($2);                }
+;
 block     : body '}'
           ;
 body      : '{'  
@@ -123,7 +123,7 @@ allocator : TOK_ALLOC TOK_LT TOK_STRING TOK_GT '(' expr ')'
            { $$ = $1->adopt($6);}
           | TOK_ALLOC TOK_LT TOK_STRUCT TOK_IDENT TOK_GT '(' ')'
 	  { $$ = $1->adopt($3, $4);}
-          | TOK_ALLOC TOK_LT TOK_ARRAY TOK_LT plaintype
+          | TOK_ALLOC TOK_LT TOK_ARRAY TOK_LT type
 	    TOK_GT TOK_GT '(' expr ')'
            { $$ = $1->adopt($9); }
           ;
@@ -136,6 +136,7 @@ callbod   : TOK_IDENT '('
           | callbod ',' expr { $$ = $1->adopt($3); destroy($2); }
 variable  : TOK_IDENT
           | expr TOK_ARROW TOK_IDENT { $$ = $2->adopt($1, $3);}
+| expr '[' expr ']' { $$ = $1->adopt($3); }
           ;
 constant  : TOK_INTCON
           | TOK_STRINGCON
