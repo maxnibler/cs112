@@ -68,8 +68,17 @@ void astree::dump (ostream& out, astree* tree) {
                    else tree->dump_node (out);
 }
 
+string linew(int depth) {
+  if (depth == 0) return "";
+  string ret = "", add = "|  ";
+  for (int i = 0; i < depth; i++){
+    ret += add;
+  }
+  return ret;
+}
+
 void astree::print (ostream& out, astree* tree, int depth) {
-  out << depth << " AST: " << setw (depth * 3) << ""
+  out << linew (depth) << ""
        << tree << endl;
    for (astree* child: tree->children) {
       astree::print (out, child, depth + 1);

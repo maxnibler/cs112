@@ -11,7 +11,6 @@ using namespace std;
 
 %debug
 %defines
-%error-verbose
 %token-table
 %verbose
 
@@ -32,80 +31,116 @@ using namespace std;
 %left   '*' '/' '%'
 %right  '^'
 %right  TOK_NOT
+%left   TOK_ARROW
 
 %start program
 
 %%
 
-start     : program              { $$ = $1 = nullptr;       }
-          ;
 program   : program structdef    { $$ = $1->adopt ($2);     }
-          | program function     { $$ = $1->adopt($2);     }
+          | program function     { $$ = $1->adopt ($2);     }
           | program vardecl      { $$ = $1->adopt ($2);     }
           | program error '}'    { $$ = $1;                 }
           | program error ';'    { $$ = $1;                 }
 	  | %empty               { $$ = parser::root;       }
 	  ;
-structdef : TOK_STRUCT TOK_IDENT '{' type TOK_IDENT '}' ';'
-           { destroy($2); destroy($5, $6); $3 = $4; $$ = $1; }
+structdef : structdec '}' ';'
+           { destroy($2, $3); }
           ;
+structdec : TOK_STRUCT TOK_IDENT '{'
+           { $$ = $1->adopt($2); destroy($3); }
+          | structdec type TOK_IDENT ';'
+           { $$ = $1->adopt($2, $3); destroy($4); }
 type      : plaintype
-          | TOK_ARRAY
+          | TOK_ARRAY '<' plaintype '>' { $$ = $1->adopt($3); }
           ;
 plaintype : TOK_INT
           | TOK_STRING
-          | TOK_PTR
+          | TOK_PTR TOK_LT TOK_STRUCT TOK_IDENT TOK_GT
+           { $$ = $1->adopt($3, $4); destroy($2, $5); }
           | TOK_VOID
           ;
-function  : plaintype TOK_IDENT '(' ')' block
-{ $$ = new astree(TOK_FUNC, $1->loc, ""); destroy($3, $4);
+function  : plaintype TOK_IDENT
+           { $$ = new astree(TOK_FUNC, $1->loc, "");
              astree* temp = new astree(TOK_TYPE_ID, $1->loc, "");
-             $$->adopt(temp, $5); temp->adopt($1, $2); }
-          | plaintype TOK_IDENT '(' parameters ')' block
-{ $$ = new astree(TOK_FUNC, $1->loc, ""); destroy($5);
-             astree* temp = new astree(TOK_TYPE_ID, $1->loc, "");
-             $$->adopt(temp, $4); $$->adopt($6); temp->adopt($1, $2); }
+             temp->adopt($1, $2); $$->adopt(temp);}
+          | function parameters
+           { $$ = $1->adopt($2); }
+          | function block
+          { $$ = $1->adopt($2); }
           ;
-parameters: type TOK_IDENT {$$ = new astree(TOK_PARAM, $1->loc, "(");
-   $$->adopt($1, $2);}
-| parameters ',' type TOK_IDENT {$$ = $1->adopt($3, $4); destroy($2);}
+parameters: '(' {$$ = new astree(TOK_PARAM, $1->loc, "("); }
+          | parameters type TOK_IDENT
+            { $$ = $1->adopt($2, $3);}
+          | parameters ',' type TOK_IDENT
+	   { $$ = $1->adopt($3, $4); destroy($2);                }
+          | parameters ')' { destroy($2); }
 	  ;
-block     : '{' { $$ = new astree(TOK_BLOCK, $1->loc, "{");}
-          | block statement { $$ = $1->adopt($2); }
-          | '}' 
-          | ';' { destroy($1); }
+block     : body '}'
           ;
+body      : '{'  
+{ $$ = new astree(TOK_BLOCK, $1->loc, "{");}
+| body statement { $$ = $1->adopt($2); }
 statement : vardecl    { $$ = $1; }
 	  | expr ';'   { $$ = $1; destroy($2);}
           | block
+	  | while
+	  | ifelse
           | return              { $$ = $1; }
+          | ';'
           ;
-vardecl   : type TOK_IDENT ';'   { destroy($3); $$ = $1;}
-          | type TOK_IDENT '=' expr ';'
-	  { destroy($3, $5); $$ = $1->adopt ($2); $$ = $1->adopt($4);}
+vardecl   : varbod ';'   { destroy($2); $$ = $1;}
           ;
-expr      : expr '+' expr { $$ = $2->adopt($1, $3);}
-          | expr '-' expr { $$ = $2->adopt($1, $3);}
-          | expr '*' expr { $$ = $2->adopt($1, $3);}
-          | expr '/' expr { $$ = $2->adopt($1, $3);}
-          | expr '%' expr { $$ = $2->adopt($1, $3);}
-          | expr '=' expr { $$ = $2->adopt($1, $3);}
-          | variable
-	  | call
-	  | constant
+varbod    : type TOK_IDENT {$$ = $1->adopt($2); }
+          | varbod '=' expr {destroy($2), $$ = $1->adopt($3); }
           ;
-constant  : TOK_INTCON
-          | TOK_STRINGCON
-          | TOK_CHARCON
+while     : TOK_WHILE '(' expr ')' statement
+           { $$ = $1->adopt($3, $5); destroy($2, $4); }
           ;
-call      : TOK_IDENT '(' expr ')' { $$ = $1->adopt($3); }
+ifelse    : TOK_IF '(' expr ')' statement
+           { $$ = $1->adopt($3, $5); destroy($2, $4); }
+          | ifelse TOK_ELSE statement
+	  { $$ = $1->adopt($2); $2->adopt($3); }
           ;
 return    : TOK_RETURN expr ';' {destroy($3); $$ = $1->adopt($2); }
           | TOK_RETURN ';' {destroy($2); $$ = $1; }
           ;
+expr      : expr binop expr { $$ = $2->adopt($1, $3);}
+          | unop expr { $$ = $1->adopt($2); }
+          | variable
+	  | call
+	  | constant
+	  | allocator
+	  | '(' expr ')' { $$ = $2; destroy($1, $3);}
+          ;
+binop     : '+' | '-' | '*' | '/' | '%' | '=' | '^'
+          | TOK_GT | TOK_GE | TOK_LT | TOK_LE | TOK_NE
+          | TOK_EQ
+          ;
+unop      : '+' | '-' | TOK_NOT
+          ;
+allocator : TOK_ALLOC TOK_LT TOK_STRING TOK_GT '(' expr ')'
+           { $$ = $1->adopt($6);}
+          | TOK_ALLOC TOK_LT TOK_STRUCT TOK_IDENT TOK_GT '(' ')'
+	  { $$ = $1->adopt($3, $4);}
+          | TOK_ALLOC TOK_LT TOK_ARRAY TOK_LT plaintype
+	    TOK_GT TOK_GT '(' expr ')'
+           { $$ = $1->adopt($9); }
+          ;
+call      : callbod ')' {$$ = $1; destroy($2);}
+          ;
+callbod   : TOK_IDENT '(' 
+           { $$ = new astree(TOK_CALL, $1->loc, "(");
+             $$->adopt($1); destroy($2);} 
+          | callbod expr { $$ = $1->adopt($2); }
+          | callbod ',' expr { $$ = $1->adopt($3); destroy($2); }
 variable  : TOK_IDENT
-          | expr ',' expr { $$ = $1->adopt($3); destroy($2);}
-          | expr TOK_ARROW TOK_IDENT { $$ = $1->adopt($3); destroy($2);}
+          | expr TOK_ARROW TOK_IDENT { $$ = $2->adopt($1, $3);}
+          ;
+constant  : TOK_INTCON
+          | TOK_STRINGCON
+          | TOK_CHARCON
+          | TOK_NULLPTR
           ;
 %%
 
