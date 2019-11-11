@@ -39,6 +39,8 @@ struct astree {
 
 ostream& operator<< (ostream&, const astree*);
 
+string linew(int depth);
+
 void destroy (astree* tree1, astree* tree2 = nullptr);
 
 #endif

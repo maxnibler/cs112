@@ -1,8 +1,8 @@
 DEPS = ${CDEPS} ${YYDEPS}
 YYDEPS = yylex yyparse
 CDEPS = string_set astree lyutils auxlib
-CPP = ${CDEPS:=.cpp} main.cpp
-HEAD = ${CDEPS:=.h}
+CPP = ${CDEPS:=.cpp} main.cpp 
+HEAD = ${CDEPS:=.h} oclib.h
 OBJ = ${DEPS:=.o} main.o
 GPP = g++ -std=gnu++2a -g -O0
 EXEC = oc
@@ -15,8 +15,8 @@ HYGEN = yyparse.h
 CYGEN = yyparse.cpp
 LREPORT = yylex.output
 YREPORT = yyparse.output
-GEN = ${CLGEN} ${CYGEN} ${HYGEN} ${LREPORT} ${YREPORT}
-SOURCE = ${LSOURCES} ${YSOURCES}
+GEN = ${CLGEN} ${CYGEN} ${HYGEN} ${LREPORT} ${YREPORT} 
+SOURCE = ${LSOURCES} ${YSOURCES} oclib.h oclib.c
 
 all : $(HYGEN) $(CLGEN) $(OBJ)
 	$(GPP) $(WARN) -o $(EXEC) $(OBJ)

@@ -52,21 +52,21 @@ structdec : TOK_STRUCT TOK_IDENT '{'
           | structdec type TOK_IDENT ';'
            { $$ = $1->adopt($2, $3); destroy($4); }
 type      : TOK_INT
-          | TOK_STRING
+          | TOK_STRING 
           | TOK_PTR TOK_LT TOK_STRUCT TOK_IDENT TOK_GT
            { $$ = $1->adopt($3, $4); destroy($2, $5); }
           | TOK_VOID
           | TOK_ARRAY TOK_LT type TOK_GT
 	   { $$ = $1->adopt($3); destroy($2, $4); }
           ;
-function  : type TOK_IDENT
+function  : funbod ';' {$$ = $1; destroy($2); }
+          | funbod block
+           { $$ = $1->adopt($2); }
+          ;
+funbod    : type TOK_IDENT parameters
            { $$ = new astree(TOK_FUNC, $1->loc, "");
              astree* temp = new astree(TOK_TYPE_ID, $1->loc, "");
-             temp->adopt($1, $2); $$->adopt(temp);}
-          | function parameters
-           { $$ = $1->adopt($2); }
-          | function block
-          { $$ = $1->adopt($2); }
+             temp->adopt($1, $2); $$->adopt(temp, $3);}
           ;
 parameters: parambod ')' { destroy($2); }
 	  ;
@@ -75,12 +75,12 @@ parambod  : '(' {$$ = new astree(TOK_PARAM, $1->loc, "("); }
             { $$ = $1->adopt($2, $3);}
           | parambod ',' type TOK_IDENT
 	   { $$ = $1->adopt($3, $4); destroy($2);                }
-;
+          ;
 block     : body '}'
           ;
 body      : '{'  
-{ $$ = new astree(TOK_BLOCK, $1->loc, "{");}
-| body statement { $$ = $1->adopt($2); }
+          { $$ = new astree(TOK_BLOCK, $1->loc, "{");}
+          | body statement { $$ = $1->adopt($2); }
 statement : vardecl    { $$ = $1; }
 	  | expr ';'   { $$ = $1; destroy($2);}
           | block
@@ -136,7 +136,7 @@ callbod   : TOK_IDENT '('
           | callbod ',' expr { $$ = $1->adopt($3); destroy($2); }
 variable  : TOK_IDENT
           | expr TOK_ARROW TOK_IDENT { $$ = $2->adopt($1, $3);}
-| expr '[' expr ']' { $$ = $1->adopt($3); }
+          | expr '[' expr ']' { $$ = $1->adopt($3); }
           ;
 constant  : TOK_INTCON
           | TOK_STRINGCON
