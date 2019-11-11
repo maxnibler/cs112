@@ -47,8 +47,12 @@ program   : program structdef    { $$ = $1->adopt ($2);     }
           | program error ';'    { $$ = $1;                 }
 	  | %empty               { $$ = parser::root;       }
 	  ;
-structdef : TOK_STRUCT TOK_IDENT '{' type TOK_IDENT ';' '}' ';'
-           { $$ = $1->adopt($2, $4); }
+structdef : TOK_STRUCT TOK_IDENT '{'
+           { $$ = $1->adopt($2); destroy($3); }
+          | structdef type TOK_IDENT ';'
+           { $$ = $1->adopt($2, $3); destroy($4); }
+          | structdef '}' ';'
+           { $$ = $1; destroy($2, $3); }
           ;
 type      : plaintype
           | TOK_ARRAY
@@ -58,14 +62,14 @@ plaintype : TOK_INT
           | TOK_PTR TOK_LT TOK_STRUCT TOK_IDENT TOK_GT
           | TOK_VOID
           ;
-function  : plaintype TOK_IDENT '(' ')' block
-           { $$ = new astree(TOK_FUNC, $1->loc, ""); destroy($3, $4);
+function  : plaintype TOK_IDENT '('
+           { $$ = new astree(TOK_FUNC, $1->loc, ""); destroy($3);
              astree* temp = new astree(TOK_TYPE_ID, $1->loc, "");
-             $$->adopt(temp, $5); temp->adopt($1, $2); }
-          | plaintype TOK_IDENT '(' parameters ')' block
-           { $$ = new astree(TOK_FUNC, $1->loc, ""); destroy($5);
-             astree* temp = new astree(TOK_TYPE_ID, $1->loc, "");
-             $$->adopt(temp, $4); $$->adopt($6); temp->adopt($1, $2); }
+             temp->adopt($1, $2); $$->adopt(temp);}
+          | function parameters
+           { $$ = $1->adopt($2); }
+| function ')' block
+{ $$ = $1->adopt($3); destroy($2); }
           ;
 parameters: type TOK_IDENT { $$ = new astree(TOK_PARAM, $1->loc, "(");
                              $$->adopt($1, $2);}
