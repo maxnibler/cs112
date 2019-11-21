@@ -1,6 +1,6 @@
 DEPS = ${CDEPS} ${YYDEPS}
 YYDEPS = yylex yyparse
-CDEPS = string_set astree lyutils auxlib
+CDEPS = string_set astree lyutils auxlib symbol
 CPP = ${CDEPS:=.cpp} main.cpp 
 HEAD = ${CDEPS:=.h} oclib.h
 OBJ = ${DEPS:=.o} main.o
