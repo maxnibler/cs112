@@ -88,6 +88,6 @@ IDENT           ({LETTER}({LETTER}|{DIGIT})*)
 {NOTNUMBER}                 {
                 return lexer::badtoken(TOK_INTCON);     }
 
-.                           {lexer::badtoken (*yytext); }
+.                           {lexer::badtoken (-1); }
 %%
 

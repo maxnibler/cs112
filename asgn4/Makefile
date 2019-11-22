@@ -64,6 +64,6 @@ test :
 	cat 01-test.oc
 
 submit :
-	submit cse110a-wm.f19 asg3 Makefile README
-	submit cse110a-wm.f19 asg3 $(CPP) $(HEAD) $(SOURCE)
+	submit cse110a-wm.f19 asg4 Makefile README
+	submit cse110a-wm.f19 asg4 $(CPP) $(HEAD) $(SOURCE)
 

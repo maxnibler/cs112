@@ -105,7 +105,8 @@ int main(int argc, char* argv[]){
   yyin = popen (com.c_str(), "r");
   //int lexint;
   string lexstr;
-  yyparse();
+  int ret = yyparse();
+  cout << ret << endl;
   buffer.open(fileast, std::ios::out);
   ostream os(&buffer);
   astree::print(os, parser::root, 0);
