@@ -3,8 +3,10 @@
 #include <cassert>
 #include <iomanip>
 #include <iostream>
+
 using namespace std;
 
+#include "symbol.h"
 #include "astree.h"
 #include "string_set.h"
 #include "lyutils.h"
@@ -90,3 +92,9 @@ void destroy (astree* tree1, astree* tree2) {
    if (tree2 != nullptr) delete tree2;
 }
 
+void astree::postorder(ostream& f, astree* tree, int depth){
+  for (astree* child: tree->children){
+    astree::postorder(f,child,depth+1);
+  }
+  putSym(f,tree->symbol,tree->loc);
+}

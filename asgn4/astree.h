@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
 using namespace std;
 
 #include "auxlib.h"
@@ -35,6 +36,7 @@ struct astree {
    void dump_tree (ostream&, int depth = 0);
    static void dump (ostream& out, astree* tree);
    static void print (ostream& out, astree* tree, int depth = 0);
+   static void postorder(ostream& f, astree* tree, int depth);
 };
 
 ostream& operator<< (ostream&, const astree*);

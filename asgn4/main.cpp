@@ -84,7 +84,7 @@ string addSuff(char* file, const char* suff){
 int main(int argc, char* argv[]){
   string com;
   char* baseName;
-  string filestr, filetok, fileast;
+  string filestr, filetok, fileast, filesym;
   filebuf buffer;
   string inFile = argv[argc-1];
   if ( inFile[inFile.length()-1] != 'c' ||
@@ -96,6 +96,7 @@ int main(int argc, char* argv[]){
     com = CPP + " " + inFile;
     baseName = basename(argv[argc-1]);
     filestr = addSuff(baseName, "str");
+    filesym = addSuff(baseName, "sym");
     filetok = addSuff(baseName, "tok");
     fileast = addSuff(baseName, "ast");
     tokfile = fopen(filetok.c_str(), "wb");
@@ -109,6 +110,10 @@ int main(int argc, char* argv[]){
   buffer.open(fileast, std::ios::out);
   ostream os(&buffer);
   astree::print(os, parser::root, 0);
+  buffer.close();
+  buffer.open(filesym, std::ios::out);
+  ostream sstrm(&buffer);
+  astree::postorder(sstrm, parser::root, 0);
   buffer.close();
   /*  while (true){
     lexint = yylex();
